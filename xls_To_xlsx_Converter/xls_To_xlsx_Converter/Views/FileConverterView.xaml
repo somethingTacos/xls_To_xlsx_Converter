@@ -20,8 +20,8 @@
                 <EventTrigger RoutedEvent="Button.PreviewMouseDown">
                     <BeginStoryboard>
                         <Storyboard>
-                            <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" To="0 0 0 0"
-                                             From="0 0 0 3" Duration="0:0:0"/>
+                            <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" To="1 2 1 0"
+                                             From="0 0 0 3" Duration="0:0:0.100"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
@@ -29,7 +29,7 @@
                     <BeginStoryboard>
                         <Storyboard>
                             <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" To="0 0 0 3"
-                                                From="0 0 0 0" Duration="0:0:0"/>
+                                                From="1 2 1 0" Duration="0:0:0.100"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
