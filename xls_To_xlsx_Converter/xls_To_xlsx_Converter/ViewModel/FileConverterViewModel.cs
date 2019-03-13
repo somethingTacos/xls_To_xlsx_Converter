@@ -41,3 +41,27 @@ namespace xls_To_xlsx_Converter.ViewModel
         }
     }
 }
+
+
+// I'm being lazy, I'll deal with this later...
+//static void Main(string[] args)
+//{
+//    Console.WriteLine("Enter a file path:");
+//    string path = Console.ReadLine();
+
+//    FileInfo file = new FileInfo(path);
+
+//    ConvertXLS_XLSX(file);
+//}
+
+//public static string ConvertXLS_XLSX(FileInfo file)
+//{
+//    var app = new Microsoft.Office.Interop.Excel.Application();
+//    var xlsFile = file.FullName;
+//    var wb = app.Workbooks.Open(xlsFile);
+//    var xlsxFile = xlsFile + "x";
+//    wb.SaveAs(Filename: xlsxFile, FileFormat: Microsoft.Office.Interop.Excel.XlFileFormat.xlOpenXMLWorkbook);
+//    wb.Close();
+//    app.Quit();
+//    return xlsxFile;
+//}
