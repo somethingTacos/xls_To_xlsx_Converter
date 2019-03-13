@@ -1,0 +1,13 @@
+﻿<Application x:Class="xls_To_xlsx_Converter.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:xls_To_xlsx_Converter.ViewModel"
+             xmlns:views="clr-namespace:xls_To_xlsx_Converter.Views"
+             xmlns:local="clr-namespace:xls_To_xlsx_Converter"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <DataTemplate DataType="{x:Type vm:FileConverterViewModel}">
+            <views:FileConverterView/>
+        </DataTemplate>
+    </Application.Resources>
+</Application>
