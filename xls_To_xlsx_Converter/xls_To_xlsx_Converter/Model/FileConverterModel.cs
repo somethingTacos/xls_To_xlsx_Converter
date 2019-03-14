@@ -14,9 +14,26 @@ namespace xls_To_xlsx_Converter.Model
     [AddINotifyPropertyChangedInterface]
     public class FileConverter
     {
-        public int TotalFilesToConvert { get; set; } = 0;
-        public int FilesConverted { get; set; } = 0;
+        public ObservableCollection<FileData> FilesToConvert { get; set; } = new ObservableCollection<FileData>();
+    }
 
-        public ObservableCollection<FileInfo> FilesToConvert { get; set; } = new ObservableCollection<FileInfo>();
+    [AddINotifyPropertyChangedInterface]
+    public class FileData
+    {
+        public string ConversionStatus { get; set; } = "";
+        public FileInfo FileDetails { get; set; }
+
+        public FileData(string path)
+        {
+            FileDetails = new FileInfo(path);
+        }
+    }
+
+    [AddINotifyPropertyChangedInterface]
+    public static class FileConverionInfo
+    {
+        public static bool IsConvertingFiles { get; set; } = false;
+        public static int TotalFilesToConvert { get; set; } = 0;
+        public static int FilesConverted { get; set; } = 0;
     }
 }

@@ -74,6 +74,7 @@
         </ScrollViewer>
 
         <Button Content="Convert Files" Grid.Column="1" Grid.Row="3" Margin="0 15" 
-                Style="{StaticResource ButtonStlye}"/>
+                Style="{StaticResource ButtonStlye}"
+                Command="{Binding ConvertFilesCommand}"/>
     </Grid>
 </UserControl>

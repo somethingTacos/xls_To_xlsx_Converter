@@ -13,12 +13,13 @@ namespace xls_To_xlsx_Converter.ViewModel
     public class FileConverterViewModel : IFileDragDropTarget
     {
         private NavigationViewModel _navigationViewModel { get; set; }
-
+        public AwaitableDelegateCommand ConvertFilesCommmand { get; set; }
         public FileConverter fileConverter { get; set; }
 
         public FileConverterViewModel(NavigationViewModel navigationViewModel)
         {
             _navigationViewModel = navigationViewModel;
+            ConvertFilesCommmand = new AwaitableDelegateCommand(onConvertFilesCommand, canConvertFilesCommand);
             initFileCoverter();
         }
 
@@ -38,6 +39,16 @@ namespace xls_To_xlsx_Converter.ViewModel
             }
 
             MessageBox.Show(message);
+        }
+
+        public async Task onConvertFilesCommand()
+        {
+
+        }
+
+        public bool canConvertFilesCommand()
+        {
+            return true; //this is temporary
         }
     }
 }
