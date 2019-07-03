@@ -61,14 +61,20 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="CustomControls\BannerStackPanel.cs" />
     <Compile Include="CustomControls\CustomDockPanel.cs" />
+    <Compile Include="CustomControls\MyBanner.xaml.cs">
+      <DependentUpon>MyBanner.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Helpers\FileDragDropHelper.cs" />
     <Compile Include="ViewModel\FileConverterViewModel.cs" />
     <Compile Include="ViewModel\NavigationViewModel.cs" />
     <Compile Include="Views\FileConverterView.xaml.cs">
       <DependentUpon>FileConverterView.xaml</DependentUpon>
     </Compile>
+    <Page Include="CustomControls\MyBanner.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
