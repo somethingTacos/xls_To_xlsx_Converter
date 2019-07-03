@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -18,14 +19,46 @@ namespace xls_To_xlsx_Converter.Model
     }
 
     [AddINotifyPropertyChangedInterface]
-    public class FileData
+    public class FileData : INotifyPropertyChanged
     {
         public string ConversionStatus { get; set; } = "";
         public FileInfo FileDetails { get; set; }
 
+        private bool _IsIncluded;
+        public bool IsIncluded
+        {
+            get { return _IsIncluded; }
+            set
+            {
+                _IsIncluded = value;
+                if(_IsIncluded)
+                {
+                    ConversionStatus = "Selected";
+                }
+                else
+                {
+                    ConversionStatus = "Not Selected";
+                }
+
+                RaisePropertyChanged("IsIncluded");
+            }
+        }
+
         public FileData(string path)
         {
             FileDetails = new FileInfo(path);
+            ConversionStatus = "Selected";
+            IsIncluded = true;
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        private void RaisePropertyChanged(string property)
+        {
+            if (PropertyChanged != null)
+            {
+                PropertyChanged(this, new PropertyChangedEventArgs(property));
+            }
         }
     }
 

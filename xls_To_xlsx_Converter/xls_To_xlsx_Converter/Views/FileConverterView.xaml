@@ -4,6 +4,8 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:helpers="clr-namespace:xls_To_xlsx_Converter.Helpers"
+             xmlns:model="clr-namespace:xls_To_xlsx_Converter.Model"
+             xmlns:cc="clr-namespace:xls_To_xlsx_Converter.CustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" AllowDrop="True"
              helpers:FileDragDropHelper.IsFileDragDropEnabled="True"
@@ -51,9 +53,41 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="ConvertionStatus_Style" TargetType="{x:Type TextBlock}">
+            <Setter Property="Foreground" Value="Black"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Style.Triggers>
+                <Trigger Property="Text" Value="Selected">
+                    <Setter Property="Foreground" Value="Green"/>
+                </Trigger>
+                <Trigger Property="Text" Value="Not Selected">
+                    <Setter Property="Foreground" Value="Red"/>
+                </Trigger>
+                <Trigger Property="Text" Value="Error">
+                    <Setter Property="Foreground" Value="Red"/>
+                </Trigger>
+                <Trigger Property="Text" Value="Pending...">
+                    <Setter Property="Foreground" Value="Black"/>
+                </Trigger>
+                <Trigger Property="Text" Value="Converted">
+                    <Setter Property="Foreground" Value="Green"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="CustomDockPanel_style" TargetType="{x:Type cc:CustomDockPanel}">
+            <Setter Property="Background" Value="LightGray"/>
+            <Setter Property="Margin" Value="2"/>
+            <Style.Triggers>
+                <Trigger Property="IsIncluded" Value="True">
+                    <Setter Property="Background" Value="LightSteelBlue"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
 
-    <Grid>
+    <Grid RenderOptions.EdgeMode="Aliased">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="*"/>
@@ -61,20 +95,59 @@
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="10"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="AUTO"/>
             <RowDefinition Height="8*"/>
             <RowDefinition Height="2*"/>
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Add files to be converted by drag and dropping them." Grid.Column="1"
-                   Grid.Row="1" FontSize="24"/>
-        <ScrollViewer Grid.Column="1" Grid.Row="2" Background="Gainsboro">
-
+        <TextBlock Text="Drag and drop xls files to be converted. Folders work too." Grid.Column="1"
+                   Grid.Row="1" FontSize="24" TextWrapping="Wrap"/>
+        <ScrollViewer Grid.Column="1" Grid.Row="2" Background="Gainsboro"
+                      PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
+            <ListView ItemsSource="{Binding fileConverter.FilesToConvert}" Background="Gainsboro"
+                      HorizontalContentAlignment="Stretch">
+                <ListView.ItemTemplate>
+                    <DataTemplate DataType="{x:Type model:FileData}">
+                        <cc:CustomDockPanel Style="{StaticResource CustomDockPanel_style}"
+                                            IsIncluded="{Binding IsIncluded}">
+                            <CheckBox IsChecked="{Binding IsIncluded}" Margin="5 0">
+                                <CheckBox.LayoutTransform>
+                                    <ScaleTransform ScaleX="2" ScaleY="2"/>
+                                </CheckBox.LayoutTransform>
+                            </CheckBox>
+                            <StackPanel>
+                                <TextBlock Text="{Binding FileDetails.Name}" Foreground="MediumPurple"
+                                       FontSize="20" FontWeight="SemiBold" Margin="10 5"
+                                       />
+                                <TextBlock Text="{Binding FileDetails.DirectoryName}" FontSize="15"
+                                           Margin="10 5"/>
+                            </StackPanel>
+                            <TextBlock Text="{Binding ConversionStatus}" Margin="5 0"
+                                       Style="{StaticResource ConvertionStatus_Style}"
+                                       />
+                        </cc:CustomDockPanel>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
         </ScrollViewer>
 
         <Button Content="Convert Files" Grid.Column="1" Grid.Row="3" Margin="0 15" 
                 Style="{StaticResource ButtonStlye}"
                 Command="{Binding ConvertFilesCommand}"/>
+        <Border Grid.Column="1" Grid.RowSpan="5" CornerRadius="0 0 10 10" BorderThickness="3" BorderBrush="DodgerBlue"
+                Height="40" Margin="15 0" Background="DodgerBlue" VerticalAlignment="Top">
+            <cc:BannerStackPanel Grid.RowSpan="5" Grid.Column="1" Background="DodgerBlue" Height="40"
+                             VerticalAlignment="Top" Orientation="Horizontal" Margin="20 0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="*"/>
+                        <RowDefinition Height="AUTO"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Grid.Row="1" Text="TESTING SOME TEST" Foreground="Gainsboro" FontSize="20"/>
+                </Grid>
+            </cc:BannerStackPanel>
+        </Border>
     </Grid>
 </UserControl>

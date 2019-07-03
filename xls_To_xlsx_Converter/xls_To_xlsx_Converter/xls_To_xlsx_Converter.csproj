@@ -61,6 +61,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="CustomControls\BannerStackPanel.cs" />
+    <Compile Include="CustomControls\CustomDockPanel.cs" />
     <Compile Include="Helpers\FileDragDropHelper.cs" />
     <Compile Include="ViewModel\FileConverterViewModel.cs" />
     <Compile Include="ViewModel\NavigationViewModel.cs" />

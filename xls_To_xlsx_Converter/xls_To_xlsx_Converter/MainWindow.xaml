@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:xls_To_xlsx_Converter"
         mc:Ignorable="d"
-        Title="XLS To XLSX Converter" Height="450" Width="800" MinWidth="800" MinHeight="450">
+        Title="XLS To XLSX Converter" Height="500" Width="800" MinWidth="800" MinHeight="500">
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*"/>
