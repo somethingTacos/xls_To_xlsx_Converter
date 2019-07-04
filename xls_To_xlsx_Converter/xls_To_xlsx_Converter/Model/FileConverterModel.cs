@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using PropertyChanged;
+using xls_To_xlsx_Converter.ViewModel;
 
 namespace xls_To_xlsx_Converter.Model
 {
@@ -16,6 +17,7 @@ namespace xls_To_xlsx_Converter.Model
     public class FileConverter
     {
         public ObservableCollection<FileData> FilesToConvert { get; set; } = new ObservableCollection<FileData>();
+        public int testint { get; set; } = 0;
     }
 
     [AddINotifyPropertyChangedInterface]
@@ -63,10 +65,13 @@ namespace xls_To_xlsx_Converter.Model
     }
 
     [AddINotifyPropertyChangedInterface]
-    public static class FileConverionInfo
+    public static class FileConversionInfo
     {
         public static bool IsConvertingFiles { get; set; } = false;
         public static int TotalFilesToConvert { get; set; } = 0;
         public static int FilesConverted { get; set; } = 0;
+        public static int BannerIndex { get; set; } = 1;
     }
+
+
 }

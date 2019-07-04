@@ -14,13 +14,13 @@ namespace xls_To_xlsx_Converter.ViewModel
     public class FileConverterViewModel : IFileDragDropTarget
     {
         private NavigationViewModel _navigationViewModel { get; set; }
-        public AwaitableDelegateCommand ConvertFilesCommmand { get; set; }
+        public AwaitableDelegateCommand ConvertFilesCommand { get; set; }
         public FileConverter fileConverter { get; set; }
 
         public FileConverterViewModel(NavigationViewModel navigationViewModel)
         {
             _navigationViewModel = navigationViewModel;
-            ConvertFilesCommmand = new AwaitableDelegateCommand(onConvertFilesCommand, canConvertFilesCommand);
+            ConvertFilesCommand = new AwaitableDelegateCommand(onConvertFilesCommand, canConvertFilesCommand);
             initFileCoverter();
         }
 
@@ -76,7 +76,8 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public async Task onConvertFilesCommand()
         {
-
+            //just testing this banner view switching stuff.
+            fileConverter.testint = 1;
         }
 
         public bool canConvertFilesCommand()

@@ -135,20 +135,6 @@
         <Button Content="Convert Files" Grid.Column="1" Grid.Row="3" Margin="0 15" 
                 Style="{StaticResource ButtonStlye}"
                 Command="{Binding ConvertFilesCommand}"/>
-        <cc:MyBanner Grid.Column="1" Grid.RowSpan="5"/>
-        <!--<Border Grid.Column="1" Grid.RowSpan="5" CornerRadius="0 0 10 10" BorderThickness="3" BorderBrush="DodgerBlue"
-                Height="40" Margin="15 0" Background="DodgerBlue" VerticalAlignment="Top">
-            <cc:BannerStackPanel Grid.RowSpan="5" Grid.Column="1" Background="DodgerBlue" Height="40"
-                             VerticalAlignment="Top" Orientation="Horizontal" Margin="20 0">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="*"/>
-                        <RowDefinition Height="AUTO"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <TextBlock Grid.Row="1" Text="TESTING SOME TEST" Foreground="Gainsboro" FontSize="20"/>
-                </Grid>
-            </cc:BannerStackPanel>
-        </Border>-->
+        <cc:MyBanner Grid.Column="1" Grid.RowSpan="5" BannerTemplateIndex="{Binding fileConverter.testint}"/>
     </Grid>
 </UserControl>

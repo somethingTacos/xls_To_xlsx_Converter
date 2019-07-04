@@ -67,9 +67,16 @@
     </Compile>
     <Compile Include="Helpers\FileDragDropHelper.cs" />
     <Compile Include="ViewModel\FileConverterViewModel.cs" />
+    <Compile Include="ViewModel\BannerViewModel.cs" />
     <Compile Include="ViewModel\NavigationViewModel.cs" />
+    <Compile Include="Views\DialogBannerView.xaml.cs">
+      <DependentUpon>DialogBannerView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\FileConverterView.xaml.cs">
       <DependentUpon>FileConverterView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\InfoBannerView.xaml.cs">
+      <DependentUpon>InfoBannerView.xaml</DependentUpon>
     </Compile>
     <Page Include="CustomControls\MyBanner.xaml">
       <SubType>Designer</SubType>
@@ -92,7 +99,15 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="Views\DialogBannerView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\FileConverterView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\InfoBannerView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
