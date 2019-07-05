@@ -30,5 +30,14 @@ namespace xls_To_xlsx_Converter.CustomControls
             get { return (int)GetValue(BannerTemplateIndexProperty); }
             set { SetValue(BannerTemplateIndexProperty, value); }
         }
+
+        public static readonly DependencyProperty IsDialogBannerProperty =
+            DependencyProperty.Register("IsDialogBanner", typeof(bool), typeof(MyBanner), new PropertyMetadata(false));
+
+        public bool IsDialogBanner
+        {
+            get { return (bool)GetValue(IsDialogBannerProperty); }
+            set { SetValue(IsDialogBannerProperty, value); }
+        }
     }
 }

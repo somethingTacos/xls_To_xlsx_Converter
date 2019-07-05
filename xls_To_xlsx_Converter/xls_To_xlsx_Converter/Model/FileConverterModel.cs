@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using PropertyChanged;
 using xls_To_xlsx_Converter.ViewModel;
 
@@ -17,7 +18,30 @@ namespace xls_To_xlsx_Converter.Model
     public class FileConverter
     {
         public ObservableCollection<FileData> FilesToConvert { get; set; } = new ObservableCollection<FileData>();
-        public int testint { get; set; } = 0;
+        public int SelectedBannerIndex { get; set; } = 0;
+        public string InfoBannerText { get; set; } = "Info Banner Text";
+        public int InfoBannerProgress { get; set; } = 0;
+        public bool BannerExpanded { get; set; } = false;
+        public bool IsDialogBanner { get; set; } = false;
+
+        public string DialogBannerText { get; set; } = "Dialog Banner Text";
+        public bool IsRecursiveSearch { get; set; } = false;
+
+        public void ShowInfoBanner(DispatcherTimer infoBannerTimer, string NewText)
+        {
+            infoBannerTimer.Stop();
+            InfoBannerText = NewText;
+            InfoBannerProgress = 0;
+            BannerExpanded = true;
+            infoBannerTimer.Start();
+        }
+
+        public void ShowDialogBanner(string NewText)
+        {
+            DialogBannerText = NewText;
+            IsDialogBanner = true;
+            BannerExpanded = true;
+        }
     }
 
     [AddINotifyPropertyChangedInterface]

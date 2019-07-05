@@ -8,6 +8,7 @@ using xls_To_xlsx_Converter.Model;
 using xls_To_xlsx_Converter.Helpers;
 using System.Windows;
 using System.IO;
+using System.Windows.Threading;
 
 namespace xls_To_xlsx_Converter.ViewModel
 {
@@ -16,12 +17,27 @@ namespace xls_To_xlsx_Converter.ViewModel
         private NavigationViewModel _navigationViewModel { get; set; }
         public AwaitableDelegateCommand ConvertFilesCommand { get; set; }
         public FileConverter fileConverter { get; set; }
+        public DispatcherTimer InfoBannerTimer = new DispatcherTimer();
 
         public FileConverterViewModel(NavigationViewModel navigationViewModel)
         {
             _navigationViewModel = navigationViewModel;
             ConvertFilesCommand = new AwaitableDelegateCommand(onConvertFilesCommand, canConvertFilesCommand);
+            InfoBannerTimer.Interval = TimeSpan.FromMilliseconds(50);
+            InfoBannerTimer.Tick += InfoBannerTimer_Tick;
             initFileCoverter();
+        }
+
+        private void InfoBannerTimer_Tick(object sender, EventArgs e)
+        {
+            fileConverter.InfoBannerProgress += 1;
+
+            if(fileConverter.InfoBannerProgress == 100)
+            {
+                InfoBannerTimer.Stop();
+                fileConverter.InfoBannerProgress = 0;
+                fileConverter.BannerExpanded = false;
+            }
         }
 
         public void initFileCoverter()
@@ -33,16 +49,36 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public void OnFileDrop(string[] filePaths)
         {
+            int ExistingFileCount = 0;
             foreach(string path in filePaths)
             {
                 if (Directory.Exists(path))
                 {
-                    
+                    //open the dialog banner to get info about recursion first
+
+
                     SearchOption SOption = SearchOption.AllDirectories;
                     string[] xlsFiles = Directory.GetFiles(path, "*.xls", SOption);
-                    for(int i = 0; i < xlsFiles.Count(); i++)
+                    if (xlsFiles.Count() > 0)
                     {
-                        fileConverter.FilesToConvert.Add(new FileData(xlsFiles[i]));
+                        for (int i = 0; i < xlsFiles.Count(); i++)
+                        {
+                            if (fileConverter.FilesToConvert.Where(x => x.FileDetails.FullName == xlsFiles[i]).Count() == 0)
+                            {
+                                fileConverter.FilesToConvert.Add(new FileData(xlsFiles[i]));
+                            }
+                            else
+                            {
+                                ExistingFileCount += 1;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        if (filePaths.Count() == 1)
+                        {
+                            fileConverter.ShowInfoBanner(InfoBannerTimer, "Directory did not contain any XLS files");
+                        }
                     }
                 }
                 else
@@ -57,8 +93,11 @@ namespace xls_To_xlsx_Converter.ViewModel
                         {
                             if(filePaths.Count() == 1)
                             {
-                                //maybe I'll make this a timed banner at the top of the interface. idk...
-                                MessageBox.Show("File already added to list");
+                                fileConverter.ShowInfoBanner(InfoBannerTimer, "File already added to list");
+                            }
+                            else
+                            {
+                                ExistingFileCount += 1;
                             }
                         }
                     }
@@ -66,18 +105,21 @@ namespace xls_To_xlsx_Converter.ViewModel
                     {
                         if (filePaths.Count() == 1)
                         {
-                            //maybe I'll make this a timed banner at the top of the interface. idk...
-                            MessageBox.Show("File or folder did not contain any xls files", "Nothing to do here", MessageBoxButton.OK);
+                            fileConverter.ShowInfoBanner(InfoBannerTimer, "File is not an XLS file");
                         }
                     }
                 }
+            }
+
+            if (ExistingFileCount > 0)
+            {
+                fileConverter.ShowInfoBanner(InfoBannerTimer, $"{ExistingFileCount.ToString()} files were already found in the list and have not been added.");
             }
         }
 
         public async Task onConvertFilesCommand()
         {
-            //just testing this banner view switching stuff.
-            fileConverter.testint = 1;
+            
         }
 
         public bool canConvertFilesCommand()

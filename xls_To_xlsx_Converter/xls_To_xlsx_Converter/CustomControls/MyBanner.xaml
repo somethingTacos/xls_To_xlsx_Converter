@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:vm="clr-namespace:xls_To_xlsx_Converter.ViewModel"
              xmlns:views="clr-namespace:xls_To_xlsx_Converter.Views"
+             xmlns:cc="clr-namespace:xls_To_xlsx_Converter.CustomControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
@@ -14,10 +15,43 @@
         <DataTemplate x:Key="DialogBanner" DataType="{x:Type vm:BannerViewModel}">
             <views:DialogBannerView/>
         </DataTemplate>
+        <Style x:Key="BorderStyle" TargetType="{x:Type Border}">
+            <Setter Property="Height" Value="0"/>
+            <Setter Property="Margin" Value="15 0"/>
+            <Setter Property="BorderBrush" Value="DodgerBlue"/>
+            <Setter Property="Background" Value="DodgerBlue"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="CornerRadius" Value="0 0 10 10"/>
+            <Style.Triggers>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                   Value="True"/>
+                        <Condition Binding="{Binding IsDialogBanner, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                   Value="False"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
+                                                 To="40" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.EnterActions>
+                    <MultiDataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="40"
+                                                 To="0" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.ExitActions>
+                </MultiDataTrigger>
+            </Style.Triggers>
+        </Style>
     </UserControl.Resources>
     <Grid>
-        <Border CornerRadius="0 0 10 10" BorderBrush="DodgerBlue"
-                Height="40" Margin="15 0" Background="DodgerBlue" VerticalAlignment="Top">
+        <Border Style="{StaticResource BorderStyle}">
             <DockPanel LastChildFill="True" Grid.Column="1" Grid.Row="0" Grid.RowSpan="2">
                 <ContentControl x:Name="Pages" DockPanel.Dock="Right" Content="{Binding}">
                     <ContentControl.Style>

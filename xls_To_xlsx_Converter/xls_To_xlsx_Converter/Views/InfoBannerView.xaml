@@ -7,7 +7,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-        <TextBlock Text="Some Text Here" Foreground="Gainsboro" FontSize="20" 
+        <TextBlock Text="{Binding fileConverter.InfoBannerText}" Foreground="Gainsboro" FontSize="20" 
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <ProgressBar VerticalAlignment="Top" Height="4" Foreground="#FF2451D6" 
+                     Value="{Binding fileConverter.InfoBannerProgress}"
+                     Background="DodgerBlue" BorderBrush="DodgerBlue"/>
     </Grid>
 </UserControl>

@@ -135,6 +135,8 @@
         <Button Content="Convert Files" Grid.Column="1" Grid.Row="3" Margin="0 15" 
                 Style="{StaticResource ButtonStlye}"
                 Command="{Binding ConvertFilesCommand}"/>
-        <cc:MyBanner Grid.Column="1" Grid.RowSpan="5" BannerTemplateIndex="{Binding fileConverter.testint}"/>
+        <cc:MyBanner Grid.Column="1" Grid.RowSpan="5" IsExpanded="{Binding fileConverter.BannerExpanded}"
+                     BannerTemplateIndex="{Binding fileConverter.SelectedBannerIndex}"
+                     IsDialogBanner="{Binding fileConverter.IsDialogBanner}"/>
     </Grid>
 </UserControl>

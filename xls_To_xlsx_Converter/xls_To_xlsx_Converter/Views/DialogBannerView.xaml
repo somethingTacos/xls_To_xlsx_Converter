@@ -6,8 +6,53 @@
              xmlns:local="clr-namespace:xls_To_xlsx_Converter.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock Text="Dialog Banner View" Foreground="Gainsboro" FontSize="20"
-                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    <UserControl.Resources>
+        <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
+            <Setter Property="GroupName" Value="SearchOption"/>
+            <Setter Property="Grid.Column" Value="1"/>
+            <Setter Property="Grid.ColumnSpan" Value="3"/>
+            <Setter Property="Foreground" Value="Gainsboro"/>
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="DodgerBlue">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="5"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="150"/>
+            <ColumnDefinition Width="5"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="5"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="AUTO"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="30"/>
+            <RowDefinition Height="5"/>
+        </Grid.RowDefinitions>
+        <TextBlock Text="{Binding fileCoverter.DialogBannerText}" Foreground="Gainsboro" FontSize="20"
+                   Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"/>
+        <Separator Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"/>
+        <RadioButton Grid.Row="3" Style="{StaticResource RadioButtonStyle}" IsChecked="True"
+                     Content="Only search the current directory for xls files.">
+            <RadioButton.LayoutTransform>
+                <ScaleTransform ScaleX="2" ScaleY="2"/>
+            </RadioButton.LayoutTransform>
+        </RadioButton>
+        <RadioButton Grid.Row="4" Style="{StaticResource RadioButtonStyle}"
+                     Content="Search the current directory and sub directories for xls files.">
+            <RadioButton.LayoutTransform>
+                <ScaleTransform ScaleX="2" ScaleY="2"/>
+            </RadioButton.LayoutTransform>
+        </RadioButton>
+        <Button Content="Start Search" Grid.Row="6" Grid.Column="2" Margin="2 2"/>
+        <Button Content="Cancel" Grid.Row="6" Grid.Column="3" Margin="2 2"/>
     </Grid>
 </UserControl>
