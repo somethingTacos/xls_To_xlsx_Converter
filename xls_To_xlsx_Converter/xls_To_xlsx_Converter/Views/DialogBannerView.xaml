@@ -9,17 +9,20 @@
     <UserControl.Resources>
         <Style x:Key="RadioButtonStyle" TargetType="{x:Type RadioButton}">
             <Setter Property="GroupName" Value="SearchOption"/>
+            <Setter Property="FontSize" Value="8"/>
+            <Setter Property="Margin" Value="0 5"/>
             <Setter Property="Grid.Column" Value="1"/>
             <Setter Property="Grid.ColumnSpan" Value="3"/>
             <Setter Property="Foreground" Value="Gainsboro"/>
             <Style.Triggers>
                 <Trigger Property="IsChecked" Value="True">
                     <Setter Property="Foreground" Value="White"/>
+                    <Setter Property="FontWeight" Value="SemiBold"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
-    <Grid Background="DodgerBlue">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="5"/>
             <ColumnDefinition Width="*"/>
@@ -37,7 +40,7 @@
             <RowDefinition Height="30"/>
             <RowDefinition Height="5"/>
         </Grid.RowDefinitions>
-        <TextBlock Text="{Binding fileCoverter.DialogBannerText}" Foreground="Gainsboro" FontSize="20"
+        <TextBlock Text="{Binding fileConverter.DialogBannerText}" Foreground="Gainsboro" FontSize="20"
                    Grid.Row="1" Grid.Column="1" Grid.ColumnSpan="3"/>
         <Separator Grid.Row="2" Grid.Column="1" Grid.ColumnSpan="3"/>
         <RadioButton Grid.Row="3" Style="{StaticResource RadioButtonStyle}" IsChecked="True"
@@ -46,13 +49,15 @@
                 <ScaleTransform ScaleX="2" ScaleY="2"/>
             </RadioButton.LayoutTransform>
         </RadioButton>
-        <RadioButton Grid.Row="4" Style="{StaticResource RadioButtonStyle}"
+        <RadioButton Grid.Row="4" Style="{StaticResource RadioButtonStyle}" IsChecked="{Binding fileConverter.IsRecursiveSearch}"
                      Content="Search the current directory and sub directories for xls files.">
             <RadioButton.LayoutTransform>
                 <ScaleTransform ScaleX="2" ScaleY="2"/>
             </RadioButton.LayoutTransform>
         </RadioButton>
-        <Button Content="Start Search" Grid.Row="6" Grid.Column="2" Margin="2 2"/>
-        <Button Content="Cancel" Grid.Row="6" Grid.Column="3" Margin="2 2"/>
+        <Button Content="Start Search" Grid.Row="6" Grid.Column="2" Margin="2 2"
+                Command="{Binding StartDirectorySerachCommand}"/>
+        <Button Content="Cancel" Grid.Row="6" Grid.Column="3" Margin="2 2"
+                Command="{Binding CancelSearchCommand}"/>
     </Grid>
 </UserControl>

@@ -18,11 +18,11 @@ namespace xls_To_xlsx_Converter.Model
     public class FileConverter
     {
         public ObservableCollection<FileData> FilesToConvert { get; set; } = new ObservableCollection<FileData>();
-        public int SelectedBannerIndex { get; set; } = 0;
+        public int SelectedBannerIndex { get; set; } = 1;
         public string InfoBannerText { get; set; } = "Info Banner Text";
         public int InfoBannerProgress { get; set; } = 0;
-        public bool BannerExpanded { get; set; } = false;
-        public bool IsDialogBanner { get; set; } = false;
+        public bool IsExpandedInfoBanner { get; set; } = false;
+        public bool IsExpandedDialogBanner { get; set; } = false;
 
         public string DialogBannerText { get; set; } = "Dialog Banner Text";
         public bool IsRecursiveSearch { get; set; } = false;
@@ -30,17 +30,18 @@ namespace xls_To_xlsx_Converter.Model
         public void ShowInfoBanner(DispatcherTimer infoBannerTimer, string NewText)
         {
             infoBannerTimer.Stop();
+            SelectedBannerIndex = 0;
             InfoBannerText = NewText;
             InfoBannerProgress = 0;
-            BannerExpanded = true;
+            IsExpandedInfoBanner = true;
             infoBannerTimer.Start();
         }
 
         public void ShowDialogBanner(string NewText)
         {
+            SelectedBannerIndex = 1;
             DialogBannerText = NewText;
-            IsDialogBanner = true;
-            BannerExpanded = true;
+            IsExpandedDialogBanner = true;
         }
     }
 
@@ -89,12 +90,15 @@ namespace xls_To_xlsx_Converter.Model
     }
 
     [AddINotifyPropertyChangedInterface]
-    public static class FileConversionInfo
+    public static class AdditionalStaticData
     {
         public static bool IsConvertingFiles { get; set; } = false;
         public static int TotalFilesToConvert { get; set; } = 0;
         public static int FilesConverted { get; set; } = 0;
         public static int BannerIndex { get; set; } = 1;
+        public static ObservableCollection<string> UnprocessedPaths { get; set; } = new ObservableCollection<string>();
+        public static int ExistingFileCount { get; set; } = 0;
+        public static string SearchDir { get; set; } = "";
     }
 
 

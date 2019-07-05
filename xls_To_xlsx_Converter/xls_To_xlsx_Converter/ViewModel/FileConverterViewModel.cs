@@ -9,6 +9,7 @@ using xls_To_xlsx_Converter.Helpers;
 using System.Windows;
 using System.IO;
 using System.Windows.Threading;
+using System.Collections.ObjectModel;
 
 namespace xls_To_xlsx_Converter.ViewModel
 {
@@ -16,6 +17,8 @@ namespace xls_To_xlsx_Converter.ViewModel
     {
         private NavigationViewModel _navigationViewModel { get; set; }
         public AwaitableDelegateCommand ConvertFilesCommand { get; set; }
+        public MyICommand StartDirectorySerachCommand { get; set; }
+        public MyICommand CancelSearchCommand { get; set; }
         public FileConverter fileConverter { get; set; }
         public DispatcherTimer InfoBannerTimer = new DispatcherTimer();
 
@@ -23,6 +26,8 @@ namespace xls_To_xlsx_Converter.ViewModel
         {
             _navigationViewModel = navigationViewModel;
             ConvertFilesCommand = new AwaitableDelegateCommand(onConvertFilesCommand, canConvertFilesCommand);
+            StartDirectorySerachCommand = new MyICommand(onStartDirectorySerachCommand);
+            CancelSearchCommand = new MyICommand(onCancelSearchCommand);
             InfoBannerTimer.Interval = TimeSpan.FromMilliseconds(50);
             InfoBannerTimer.Tick += InfoBannerTimer_Tick;
             initFileCoverter();
@@ -36,7 +41,7 @@ namespace xls_To_xlsx_Converter.ViewModel
             {
                 InfoBannerTimer.Stop();
                 fileConverter.InfoBannerProgress = 0;
-                fileConverter.BannerExpanded = false;
+                fileConverter.IsExpandedInfoBanner = false;
             }
         }
 
@@ -47,51 +52,36 @@ namespace xls_To_xlsx_Converter.ViewModel
             fileConverter = tempFC;
         }
 
-        public void OnFileDrop(string[] filePaths)
+        private void ProcessPaths(ObservableCollection<string> filePaths)
         {
             int ExistingFileCount = 0;
-            foreach(string path in filePaths)
+            foreach (string path in filePaths)
             {
+                if(AdditionalStaticData.UnprocessedPaths.Contains(path))
+                {
+                   AdditionalStaticData.UnprocessedPaths.Remove(path);
+                }
+
                 if (Directory.Exists(path))
                 {
-                    //open the dialog banner to get info about recursion first
+                    AdditionalStaticData.SearchDir = path;
 
-
-                    SearchOption SOption = SearchOption.AllDirectories;
-                    string[] xlsFiles = Directory.GetFiles(path, "*.xls", SOption);
-                    if (xlsFiles.Count() > 0)
-                    {
-                        for (int i = 0; i < xlsFiles.Count(); i++)
-                        {
-                            if (fileConverter.FilesToConvert.Where(x => x.FileDetails.FullName == xlsFiles[i]).Count() == 0)
-                            {
-                                fileConverter.FilesToConvert.Add(new FileData(xlsFiles[i]));
-                            }
-                            else
-                            {
-                                ExistingFileCount += 1;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        if (filePaths.Count() == 1)
-                        {
-                            fileConverter.ShowInfoBanner(InfoBannerTimer, "Directory did not contain any XLS files");
-                        }
-                    }
+                    string[] pathList = path.Split('\\');
+                    string dirName = pathList.Last<string>();
+                    fileConverter.ShowDialogBanner($"Choose how to search directory '{dirName}' for files.");
+                    return;
                 }
                 else
                 {
                     if (File.Exists(path) && path.EndsWith(".xls"))
                     {
-                        if(fileConverter.FilesToConvert.Where(x => x.FileDetails.FullName == path).Count() == 0)
+                        if (fileConverter.FilesToConvert.Where(x => x.FileDetails.FullName == path).Count() == 0)
                         {
                             fileConverter.FilesToConvert.Add(new FileData(path));
                         }
                         else
                         {
-                            if(filePaths.Count() == 1)
+                            if (filePaths.Count() == 1)
                             {
                                 fileConverter.ShowInfoBanner(InfoBannerTimer, "File already added to list");
                             }
@@ -117,6 +107,19 @@ namespace xls_To_xlsx_Converter.ViewModel
             }
         }
 
+        public void OnFileDrop(string[] filePaths)
+        {
+            ObservableCollection<string> paths = new ObservableCollection<string>();
+
+            for(int i = 0; i < filePaths.Count(); i++)
+            {
+                paths.Add(filePaths[i]);
+            }
+
+            AdditionalStaticData.UnprocessedPaths = new ObservableCollection<string>(paths);
+            ProcessPaths(paths);
+        }
+
         public async Task onConvertFilesCommand()
         {
             
@@ -125,6 +128,65 @@ namespace xls_To_xlsx_Converter.ViewModel
         public bool canConvertFilesCommand()
         {
             return true; //this is temporary
+        }
+
+        public void onStartDirectorySerachCommand(object parameter)
+        {
+            fileConverter.IsExpandedDialogBanner = false;
+            SearchOption SOption = SearchOption.TopDirectoryOnly;
+
+            if (fileConverter.IsRecursiveSearch)
+            {
+               SOption = SearchOption.AllDirectories;
+            }
+
+            string[] xlsFiles = Directory.GetFiles(AdditionalStaticData.SearchDir, "*.xls", SOption);
+            if (xlsFiles.Count() > 0)
+            {
+                for (int i = 0; i < xlsFiles.Count(); i++)
+                {
+                    if (fileConverter.FilesToConvert.Where(x => x.FileDetails.FullName == xlsFiles[i]).Count() == 0)
+                    {
+                        fileConverter.FilesToConvert.Add(new FileData(xlsFiles[i]));
+                    }
+                    else
+                    {
+                        AdditionalStaticData.ExistingFileCount += 1;
+                    }
+                }
+            }
+            else
+            {
+                if (AdditionalStaticData.UnprocessedPaths.Count() == 1)
+                {
+                    fileConverter.ShowInfoBanner(InfoBannerTimer, "Directory did not contain any XLS files");
+                }
+            }
+
+            if (AdditionalStaticData.UnprocessedPaths.Contains(AdditionalStaticData.SearchDir))
+            {
+                AdditionalStaticData.UnprocessedPaths.Remove(AdditionalStaticData.SearchDir);
+            }
+
+            if (AdditionalStaticData.UnprocessedPaths.Count() > 0)
+            {
+                ProcessPaths(new ObservableCollection<string>(AdditionalStaticData.UnprocessedPaths));
+            }
+        }
+
+        public void onCancelSearchCommand(object parameter)
+        {
+            fileConverter.IsExpandedDialogBanner = false;
+
+            if (AdditionalStaticData.UnprocessedPaths.Contains(AdditionalStaticData.SearchDir))
+            {
+                AdditionalStaticData.UnprocessedPaths.Remove(AdditionalStaticData.SearchDir);
+            }
+
+            if (AdditionalStaticData.UnprocessedPaths.Count() > 0)
+            {
+                ProcessPaths(new ObservableCollection<string>(AdditionalStaticData.UnprocessedPaths));
+            }
         }
     }
 }

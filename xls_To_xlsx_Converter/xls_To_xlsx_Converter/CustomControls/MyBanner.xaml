@@ -23,30 +23,45 @@
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="CornerRadius" Value="0 0 10 10"/>
             <Style.Triggers>
-                <MultiDataTrigger>
-                    <MultiDataTrigger.Conditions>
-                        <Condition Binding="{Binding IsExpanded, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                   Value="True"/>
-                        <Condition Binding="{Binding IsDialogBanner, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                                   Value="False"/>
-                    </MultiDataTrigger.Conditions>
-                    <MultiDataTrigger.EnterActions>
+                <DataTrigger Binding="{Binding IsExpandedInfoBanner, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="True">
+                    <DataTrigger.EnterActions>
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
                                                  To="40" Duration="0:0:0.200"/>
                             </Storyboard>
                         </BeginStoryboard>
-                    </MultiDataTrigger.EnterActions>
-                    <MultiDataTrigger.ExitActions>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation Storyboard.TargetProperty="Height" From="40"
                                                  To="0" Duration="0:0:0.200"/>
                             </Storyboard>
                         </BeginStoryboard>
-                    </MultiDataTrigger.ExitActions>
-                </MultiDataTrigger>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsExpandedDialogBanner, RelativeSource={RelativeSource AncestorType=UserControl}}" 
+                             Value="True">
+                    <DataTrigger.EnterActions>
+
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
+                                                 To="200" Duration="0:0:0.400"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                    <DataTrigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="200"
+                                                 To="0" Duration="0:0:0.400"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.ExitActions>
+                </DataTrigger>
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
