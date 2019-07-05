@@ -26,6 +26,7 @@
                 <DataTrigger Binding="{Binding IsExpandedInfoBanner, RelativeSource={RelativeSource AncestorType=UserControl}}"
                              Value="True">
                     <DataTrigger.EnterActions>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_ExitStyle"/>
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
@@ -45,7 +46,6 @@
                 <DataTrigger Binding="{Binding IsExpandedDialogBanner, RelativeSource={RelativeSource AncestorType=UserControl}}" 
                              Value="True">
                     <DataTrigger.EnterActions>
-
                         <BeginStoryboard>
                             <Storyboard>
                                 <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
@@ -54,7 +54,7 @@
                         </BeginStoryboard>
                     </DataTrigger.EnterActions>
                     <DataTrigger.ExitActions>
-                        <BeginStoryboard>
+                        <BeginStoryboard x:Name="DialogBannerExpand_ExitStyle">
                             <Storyboard>
                                 <DoubleAnimation Storyboard.TargetProperty="Height" From="200"
                                                  To="0" Duration="0:0:0.400"/>
