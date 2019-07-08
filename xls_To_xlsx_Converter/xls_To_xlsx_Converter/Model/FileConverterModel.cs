@@ -23,6 +23,7 @@ namespace xls_To_xlsx_Converter.Model
         public int InfoBannerProgress { get; set; } = 0;
         public bool IsExpandedInfoBanner { get; set; } = false;
         public bool IsExpandedDialogBanner { get; set; } = false;
+        public bool AltBannerExpanded { get; set; } = false;
 
         public string DialogBannerText { get; set; } = "Dialog Banner Text";
         public bool IsRecursiveSearch { get; set; } = false;
@@ -30,17 +31,21 @@ namespace xls_To_xlsx_Converter.Model
         public void ShowInfoBanner(DispatcherTimer infoBannerTimer, string NewText)
         {
             infoBannerTimer.Stop();
+            if(IsExpandedDialogBanner) { AltBannerExpanded = true; }
             SelectedBannerIndex = 0;
             InfoBannerText = NewText;
             InfoBannerProgress = 0;
+            IsExpandedDialogBanner = false;
             IsExpandedInfoBanner = true;
             infoBannerTimer.Start();
         }
 
         public void ShowDialogBanner(string NewText)
         {
+            if(IsExpandedInfoBanner) { AltBannerExpanded = true; }
             SelectedBannerIndex = 1;
             DialogBannerText = NewText;
+            IsExpandedInfoBanner = false;
             IsExpandedDialogBanner = true;
         }
     }

@@ -137,6 +137,7 @@
                 Command="{Binding ConvertFilesCommand}"/>
         <cc:MyBanner Grid.Column="1" Grid.RowSpan="5" IsExpandedInfoBanner="{Binding fileConverter.IsExpandedInfoBanner}"
                      BannerTemplateIndex="{Binding fileConverter.SelectedBannerIndex}"
-                     IsExpandedDialogBanner="{Binding fileConverter.IsExpandedDialogBanner}"/>
+                     IsExpandedDialogBanner="{Binding fileConverter.IsExpandedDialogBanner}"
+                     AltBannerIsExpanded="{Binding fileConverter.AltBannerExpanded}"/>
     </Grid>
 </UserControl>

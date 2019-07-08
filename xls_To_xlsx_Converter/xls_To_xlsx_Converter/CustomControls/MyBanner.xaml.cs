@@ -39,5 +39,14 @@ namespace xls_To_xlsx_Converter.CustomControls
             get { return (bool)GetValue(IsExpandedDialogBannerProperty); }
             set { SetValue(IsExpandedDialogBannerProperty, value); }
         }
+
+        public static readonly DependencyProperty AltBannerIsExpandedProperty =
+            DependencyProperty.Register("AltBannerIsExpanded", typeof(bool), typeof(MyBanner), new PropertyMetadata(false));
+
+        public bool AltBannerIsExpanded
+        {
+            get { return (bool)GetValue(AltBannerIsExpandedProperty); }
+            set { SetValue(AltBannerIsExpandedProperty, value); }
+        }
     }
 }

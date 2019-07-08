@@ -16,7 +16,7 @@ namespace xls_To_xlsx_Converter.Views
         private void ScrollViewer_PreviewMouseWheel(object sender, System.Windows.Input.MouseWheelEventArgs e)
         {
             ScrollViewer scv = (ScrollViewer)sender;
-            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta / 10);
+            scv.ScrollToVerticalOffset(scv.VerticalOffset - e.Delta / 5);
             e.Handled = true;
         }
     }

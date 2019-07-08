@@ -42,6 +42,8 @@ namespace xls_To_xlsx_Converter.ViewModel
                 InfoBannerTimer.Stop();
                 fileConverter.InfoBannerProgress = 0;
                 fileConverter.IsExpandedInfoBanner = false;
+                fileConverter.IsExpandedDialogBanner = false;
+                fileConverter.AltBannerExpanded = false;
             }
         }
 
@@ -68,6 +70,7 @@ namespace xls_To_xlsx_Converter.ViewModel
 
                     string[] pathList = path.Split('\\');
                     string dirName = pathList.Last<string>();
+                    InfoBannerTimer.Stop();
                     fileConverter.ShowDialogBanner($"Choose how to search directory '{dirName}' for files.");
                     return;
                 }
@@ -133,6 +136,9 @@ namespace xls_To_xlsx_Converter.ViewModel
         public void onStartDirectorySerachCommand(object parameter)
         {
             fileConverter.IsExpandedDialogBanner = false;
+            fileConverter.AltBannerExpanded = false;
+            fileConverter.IsExpandedInfoBanner = false;
+
             SearchOption SOption = SearchOption.TopDirectoryOnly;
 
             if (fileConverter.IsRecursiveSearch)

@@ -23,7 +23,154 @@
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="CornerRadius" Value="0 0 10 10"/>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding IsExpandedInfoBanner, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                <!-- Normal Info Banner open/close -->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsExpandedInfoBanner,
+                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="True"/>
+                        <Condition Binding="{Binding AltBannerIsExpanded,
+                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="False"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.EnterActions>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalExit"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltExit"/>
+                        
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalExit"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltExit"/>
+                        <BeginStoryboard x:Name="InfoBannerExpand_NormalEnter">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
+                                                 To="40" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.EnterActions>
+                    <MultiDataTrigger.ExitActions>
+                        <BeginStoryboard x:Name="InfoBannerExpand_NormalExit">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="40"
+                                                 To="0" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.ExitActions>
+                </MultiDataTrigger>
+                <!-- Info Banner from expanded dialog banner -->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsExpandedInfoBanner,
+                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="True"/>
+                        <Condition Binding="{Binding AltBannerIsExpanded,
+                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.EnterActions>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalExit"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltExit"/>
+                        
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalExit"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltExit"/>
+                        <BeginStoryboard x:Name="InfoBannerExpand_AltEnter">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="200"
+                                                 To="40" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.EnterActions>
+                    <MultiDataTrigger.ExitActions>
+                        <BeginStoryboard x:Name="InfoBannerExpand_AltExit">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="40"
+                                                 To="0" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.ExitActions>
+                </MultiDataTrigger>
+                
+                <!-- Normal Dialog banner open/close -->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsExpandedDialogBanner,
+                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="True"/>
+                        <Condition Binding="{Binding AltBannerIsExpanded,
+                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="False"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.EnterActions>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalExit"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltExit"/>
+                        
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalExit"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltExit"/>
+                        <BeginStoryboard x:Name="DialogBannerExpand_NormalEnter">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
+                                                 To="200" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.EnterActions>
+                    <MultiDataTrigger.ExitActions>
+                        <BeginStoryboard x:Name="DialogBannerExpand_NormalExit">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="200"
+                                                 To="0" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.ExitActions>
+                </MultiDataTrigger>
+                <!-- Dialog banner from expanded info banner-->
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding IsExpandedDialogBanner,
+                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="True"/>
+                        <Condition Binding="{Binding AltBannerIsExpanded,
+                             RelativeSource={RelativeSource AncestorType=UserControl}}"
+                             Value="True"/>
+                    </MultiDataTrigger.Conditions>
+                    <MultiDataTrigger.EnterActions>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalExit"/>
+                        <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltExit"/>
+                        
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltEnter"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalExit"/>
+                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltExit"/>
+                        <BeginStoryboard x:Name="DialogBannerExpand_AltEnter">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="40"
+                                                 To="200" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.EnterActions>
+                    <MultiDataTrigger.ExitActions>
+                        <BeginStoryboard x:Name="DialogBannerExpand_AltExit">
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Height" From="200"
+                                                 To="0" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </MultiDataTrigger.ExitActions>
+                </MultiDataTrigger>
+                
+                <!-- Old data triggers -->
+                <!--<DataTrigger Binding="{Binding IsExpandedInfoBanner, RelativeSource={RelativeSource AncestorType=UserControl}}"
                              Value="True">
                     <DataTrigger.EnterActions>
                         <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_ExitStyle"/>
@@ -61,7 +208,7 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </DataTrigger.ExitActions>
-                </DataTrigger>
+                </DataTrigger>-->
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
