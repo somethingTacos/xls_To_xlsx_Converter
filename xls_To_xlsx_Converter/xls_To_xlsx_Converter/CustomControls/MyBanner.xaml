@@ -74,7 +74,7 @@
                         <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltEnter"/>
                         <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalExit"/>
                         <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltExit"/>
-                        
+
                         <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalEnter"/>
                         <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltEnter"/>
                         <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalExit"/>
@@ -95,7 +95,6 @@
                         </BeginStoryboard>
                     </MultiDataTrigger.ExitActions>
                 </MultiDataTrigger>
-                
                 <!-- Normal Dialog banner open/close -->
                 <MultiDataTrigger>
                     <MultiDataTrigger.Conditions>
@@ -147,7 +146,7 @@
                         <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltEnter"/>
                         <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_NormalExit"/>
                         <RemoveStoryboard BeginStoryboardName="InfoBannerExpand_AltExit"/>
-                        
+
                         <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalEnter"/>
                         <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_AltEnter"/>
                         <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_NormalExit"/>
@@ -168,47 +167,6 @@
                         </BeginStoryboard>
                     </MultiDataTrigger.ExitActions>
                 </MultiDataTrigger>
-                
-                <!-- Old data triggers -->
-                <!--<DataTrigger Binding="{Binding IsExpandedInfoBanner, RelativeSource={RelativeSource AncestorType=UserControl}}"
-                             Value="True">
-                    <DataTrigger.EnterActions>
-                        <RemoveStoryboard BeginStoryboardName="DialogBannerExpand_ExitStyle"/>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
-                                                 To="40" Duration="0:0:0.200"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Height" From="40"
-                                                 To="0" Duration="0:0:0.200"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.ExitActions>
-                </DataTrigger>
-                <DataTrigger Binding="{Binding IsExpandedDialogBanner, RelativeSource={RelativeSource AncestorType=UserControl}}" 
-                             Value="True">
-                    <DataTrigger.EnterActions>
-                        <BeginStoryboard>
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Height" From="0"
-                                                 To="200" Duration="0:0:0.400"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.EnterActions>
-                    <DataTrigger.ExitActions>
-                        <BeginStoryboard x:Name="DialogBannerExpand_ExitStyle">
-                            <Storyboard>
-                                <DoubleAnimation Storyboard.TargetProperty="Height" From="200"
-                                                 To="0" Duration="0:0:0.400"/>
-                            </Storyboard>
-                        </BeginStoryboard>
-                    </DataTrigger.ExitActions>
-                </DataTrigger>-->
             </Style.Triggers>
         </Style>
     </UserControl.Resources>
