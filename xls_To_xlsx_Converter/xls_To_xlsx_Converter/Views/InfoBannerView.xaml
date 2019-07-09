@@ -7,23 +7,23 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
-        <Style x:Key="CloseButtonStyle" TargetType="{x:Type Button}">
+        <Style x:Key="CloseButtonStyle" BasedOn="{StaticResource NoChromeButton}" TargetType="{x:Type Button}">
             <Setter Property="Foreground" Value="White"/>
             <Setter Property="Background" Value="DodgerBlue"/>
             <Style.Triggers>
                 <EventTrigger RoutedEvent="MouseEnter" >
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="Black"
-                                            From="White" Duration="0:0:0"/>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" From="White"
+                                            To="Red" Duration="0:0:0"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>
                 <EventTrigger RoutedEvent="MouseLeave">
                     <BeginStoryboard>
                         <Storyboard>
-                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="White"
-                                            From="Black" Duration="0:0:0"/>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" From="Red"
+                                            To="White" Duration="0:0:0"/>
                         </Storyboard>
                     </BeginStoryboard>
                 </EventTrigger>

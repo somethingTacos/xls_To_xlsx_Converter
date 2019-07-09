@@ -11,7 +11,7 @@
              helpers:FileDragDropHelper.IsFileDragDropEnabled="True"
              helpers:FileDragDropHelper.FileDragDropTarget="{Binding}">
     <UserControl.Resources>
-        <Style x:Key="ButtonStlye" TargetType="Button">
+        <Style x:Key="MainButton_Style" TargetType="Button">
             <Setter Property="Background" Value="LightGreen"/>
             <Setter Property="FontSize" Value="20"/>
             <Setter Property="Foreground" Value="DarkGreen"/>
@@ -53,6 +53,67 @@
                 </EventTrigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="MainMyButton_Style" TargetType="cc:MyButton">
+            <Setter Property="Background" Value="IndianRed"/>
+            <Setter Property="FontSize" Value="20"/>
+            <Setter Property="Foreground" Value="DarkRed"/>
+            <Setter Property="BorderBrush" Value="DarkRed"/>
+            <Setter Property="BorderThickness" Value="0 0 0 3"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Width" Value="0"/>
+            <Style.Triggers>
+                <Trigger Property="NonSelectedFilesExist" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Width" From="0"
+                                             To="300" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Width" From="300"
+                                             To="0" Duration="0:0:0.200"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+                <EventTrigger RoutedEvent="Button.PreviewMouseDown">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" To="1 2 1 0"
+                                             From="0 0 0 3" Duration="0:0:0.100"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="Button.PreviewMouseUp">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ThicknessAnimation Storyboard.TargetProperty="BorderThickness" To="0 0 0 3"
+                                                From="1 2 1 0" Duration="0:0:0.100"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="DodgerBlue"
+                                            From="DarkRed" Duration="0:0:0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="DarkRed"
+                                            From="DodgerBlue" Duration="0:0:0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
         <Style x:Key="ConvertionStatus_Style" TargetType="{x:Type TextBlock}">
             <Setter Property="Foreground" Value="Black"/>
             <Setter Property="FontWeight" Value="SemiBold"/>
@@ -76,7 +137,7 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="CustomDockPanel_style" TargetType="{x:Type cc:CustomDockPanel}">
+        <Style x:Key="CustomDockPanel_Style" TargetType="{x:Type cc:CustomDockPanel}">
             <Setter Property="Background" Value="LightGray"/>
             <Setter Property="Margin" Value="2"/>
             <Style.Triggers>
@@ -85,12 +146,40 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
+        <Style x:Key="RemoveButton_Style" BasedOn="{StaticResource ResourceKey=NoChromeButton}" TargetType="{x:Type Button}">
+            <Setter Property="Background" Value="IndianRed"/>
+            <Setter Property="Foreground" Value="Gainsboro"/>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.Color" From="IndianRed"
+                                            To="Gainsboro" Duration="0:0:0.200"/>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" From="Gainsboro"
+                                            To="Red" Duration="0:0:0.200"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Background.Color" From="Gainsboro"
+                                            To="IndianRed" Duration="0:0:0.200"/>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" From="Red"
+                                            To="Gainsboro" Duration="0:0:0.200"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
     </UserControl.Resources>
 
     <Grid RenderOptions.EdgeMode="Aliased">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10"/>
             <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="AUTO"/>
             <ColumnDefinition Width="10"/>
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -101,17 +190,19 @@
             <RowDefinition Height="10"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Drag and drop xls files to be converted. Folders work too." Grid.Column="1"
+        <TextBlock Text="Drag and drop xls files to be converted. Folders work too." Grid.Column="1" Grid.ColumnSpan="2"
                    Grid.Row="1" FontSize="24" TextWrapping="Wrap"/>
-        <ScrollViewer Grid.Column="1" Grid.Row="2" Background="Gainsboro"
+        <ScrollViewer Grid.Column="1" Grid.Row="2" Grid.ColumnSpan="2" Background="Gainsboro"
                       PreviewMouseWheel="ScrollViewer_PreviewMouseWheel">
             <ListView ItemsSource="{Binding fileConverter.FilesToConvert}" Background="Gainsboro"
                       HorizontalContentAlignment="Stretch">
                 <ListView.ItemTemplate>
                     <DataTemplate DataType="{x:Type model:FileData}">
-                        <cc:CustomDockPanel Style="{StaticResource CustomDockPanel_style}"
+                        <cc:CustomDockPanel Style="{StaticResource CustomDockPanel_Style}"
                                             IsIncluded="{Binding IsIncluded}">
-                            <CheckBox IsChecked="{Binding IsIncluded}" Margin="5 0">
+                            <CheckBox IsChecked="{Binding IsIncluded}" Margin="5 0" 
+                                      Command="{Binding DataContext.UpdateFilesNotSelectedCommand, 
+                                                RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
                                 <CheckBox.LayoutTransform>
                                     <ScaleTransform ScaleX="2" ScaleY="2"/>
                                 </CheckBox.LayoutTransform>
@@ -123,19 +214,29 @@
                                 <TextBlock Text="{Binding FileDetails.DirectoryName}" FontSize="15"
                                            Margin="10 5"/>
                             </StackPanel>
+                            <Button Content="Remove" Width="60" HorizontalAlignment="Right" DockPanel.Dock="Right" 
+                                    Style="{StaticResource RemoveButton_Style}"
+                                    Command="{Binding DataContext.RemoveListedFileCommand,
+                                             RelativeSource={RelativeSource AncestorType=ScrollViewer}}"
+                                    CommandParameter="{Binding}"/>
                             <TextBlock Text="{Binding ConversionStatus}" Margin="5 0"
                                        Style="{StaticResource ConvertionStatus_Style}"
-                                       />
+                                       DockPanel.Dock="Right"/>
                         </cc:CustomDockPanel>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </ScrollViewer>
 
-        <Button Content="Convert Files" Grid.Column="1" Grid.Row="3" Margin="0 15" 
-                Style="{StaticResource ButtonStlye}"
+        <Button Content="Convert Files" Grid.Column="1" Grid.Row="3" Margin="5 15" 
+                Style="{StaticResource MainButton_Style}"
                 Command="{Binding ConvertFilesCommand}"/>
-        <cc:MyBanner Grid.Column="1" Grid.RowSpan="5" IsExpandedInfoBanner="{Binding fileConverter.IsExpandedInfoBanner}"
+        <cc:MyButton Content="Remove all 'Not Selected' files" Grid.Column="2" Grid.Row="3" Margin="5 15" 
+                NonSelectedFilesExist="{Binding fileConverter.FilesNotSelected}"
+                Style="{StaticResource MainMyButton_Style}"
+                Command="{Binding RemoveAllNonSelectedListedFilesCommand}"
+                />
+        <cc:MyBanner Grid.RowSpan="3" Grid.ColumnSpan="3" IsExpandedInfoBanner="{Binding fileConverter.IsExpandedInfoBanner}"
                      BannerTemplateIndex="{Binding fileConverter.SelectedBannerIndex}"
                      IsExpandedDialogBanner="{Binding fileConverter.IsExpandedDialogBanner}"
                      AltBannerIsExpanded="{Binding fileConverter.AltBannerExpanded}"/>

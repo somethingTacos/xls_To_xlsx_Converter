@@ -24,9 +24,10 @@ namespace xls_To_xlsx_Converter.Model
         public bool IsExpandedInfoBanner { get; set; } = false;
         public bool IsExpandedDialogBanner { get; set; } = false;
         public bool AltBannerExpanded { get; set; } = false;
-
         public string DialogBannerText { get; set; } = "Dialog Banner Text";
         public bool IsRecursiveSearch { get; set; } = false;
+
+        public bool FilesNotSelected { get; set; } = false;
 
         public void ShowInfoBanner(DispatcherTimer infoBannerTimer, string NewText)
         {
@@ -63,7 +64,8 @@ namespace xls_To_xlsx_Converter.Model
             set
             {
                 _IsIncluded = value;
-                if(_IsIncluded)
+                
+                if (_IsIncluded)
                 {
                     ConversionStatus = "Selected";
                 }

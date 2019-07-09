@@ -65,6 +65,7 @@
     <Compile Include="CustomControls\MyBanner.xaml.cs">
       <DependentUpon>MyBanner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CustomControls\MyButton.cs" />
     <Compile Include="Helpers\FileDragDropHelper.cs" />
     <Compile Include="ViewModel\FileConverterViewModel.cs" />
     <Compile Include="ViewModel\BannerViewModel.cs" />

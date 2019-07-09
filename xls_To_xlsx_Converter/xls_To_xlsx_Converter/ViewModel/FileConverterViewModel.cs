@@ -20,6 +20,10 @@ namespace xls_To_xlsx_Converter.ViewModel
         public MyICommand StartDirectorySerachCommand { get; set; }
         public MyICommand CancelSearchCommand { get; set; }
         public MyICommand CloseInfoBannerCommand { get; set; }
+        public MyICommand RemoveListedFileCommand { get; set; }
+        public MyICommand RemoveAllNonSelectedListedFilesCommand { get; set; }
+        public MyICommand UpdateFilesNotSelectedCommand { get; set; }
+
         public FileConverter fileConverter { get; set; }
         public DispatcherTimer InfoBannerTimer = new DispatcherTimer();
 
@@ -30,6 +34,9 @@ namespace xls_To_xlsx_Converter.ViewModel
             StartDirectorySerachCommand = new MyICommand(onStartDirectorySerachCommand);
             CloseInfoBannerCommand = new MyICommand(onCloseInfoBannerCommand);
             CancelSearchCommand = new MyICommand(onCancelSearchCommand);
+            RemoveListedFileCommand = new MyICommand(onRemoveListedFileCommand);
+            RemoveAllNonSelectedListedFilesCommand = new MyICommand(onRemoveAllNonSelectedListedFilesCommand);
+            UpdateFilesNotSelectedCommand = new MyICommand(onUpdateFilesNotSelectedCommand);
             InfoBannerTimer.Interval = TimeSpan.FromMilliseconds(50);
             InfoBannerTimer.Tick += InfoBannerTimer_Tick;
             initFileCoverter();
@@ -54,8 +61,6 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         private void ProcessPaths(ObservableCollection<string> filePaths)
         {
-            int ExistingFileCount = 0;
-            int NonXLSFilesCount = 0;
             foreach (string path in filePaths)
             {
                 if(AdditionalStaticData.UnprocessedPaths.Contains(path))
@@ -89,7 +94,7 @@ namespace xls_To_xlsx_Converter.ViewModel
                             }
                             else
                             {
-                                ExistingFileCount += 1;
+                                AdditionalStaticData.ExistingFileCount += 1;
                             }
                         }
                     }
@@ -101,15 +106,19 @@ namespace xls_To_xlsx_Converter.ViewModel
                         }
                         else
                         {
-                            NonXLSFilesCount += 1;
+                            //NonXLSFilesCount += 1;
                         }
                     }
                 }
             }
 
-            if (ExistingFileCount > 0)
+            if (AdditionalStaticData.UnprocessedPaths.Count() == 0)
             {
-                fileConverter.ShowInfoBanner(InfoBannerTimer, $"{ExistingFileCount.ToString()} files were already found in the list and have not been added.");
+                if (AdditionalStaticData.ExistingFileCount > 0)
+                {
+                    fileConverter.ShowInfoBanner(InfoBannerTimer, $"{AdditionalStaticData.ExistingFileCount.ToString()} files were already found in the list and have not been added.");
+                    AdditionalStaticData.ExistingFileCount = 0;
+                }
             }
         }
 
@@ -126,6 +135,33 @@ namespace xls_To_xlsx_Converter.ViewModel
             ProcessPaths(paths);
         }
 
+        public void onRemoveListedFileCommand(object parameter)
+        {
+            if (parameter is FileData fileData)
+            {
+                if(fileConverter.FilesToConvert.Contains(fileData))
+                {
+                    fileConverter.FilesToConvert.Remove(fileData);
+                }
+            }
+        }
+
+        private void onRemoveAllNonSelectedListedFilesCommand(object parameter)
+        {
+            ObservableCollection<FileData> tempFDCollection;
+            tempFDCollection = new ObservableCollection<FileData>(fileConverter.FilesToConvert);
+
+            foreach(FileData fileData in tempFDCollection)
+            {
+                if(!fileData.IsIncluded)
+                {
+                    fileConverter.FilesToConvert.Remove(fileData);
+                }
+            }
+
+            fileConverter.FilesNotSelected = false;
+        }
+
         public void onCloseInfoBannerCommand(object parameter)
         {
             CloseInfoBanner();
@@ -138,6 +174,11 @@ namespace xls_To_xlsx_Converter.ViewModel
             fileConverter.IsExpandedInfoBanner = false;
             fileConverter.IsExpandedDialogBanner = false;
             fileConverter.AltBannerExpanded = false;
+        }
+
+        public void onUpdateFilesNotSelectedCommand(object parameter)
+        {
+            fileConverter.FilesNotSelected = fileConverter.FilesToConvert.Where(x => x.IsIncluded == false).Count() > 0;
         }
 
         public async Task onConvertFilesCommand()
@@ -197,7 +238,7 @@ namespace xls_To_xlsx_Converter.ViewModel
             }
             else
             {
-                if(AdditionalStaticData.ExistingFileCount > 0)
+                if (AdditionalStaticData.ExistingFileCount > 0)
                 {
                     fileConverter.ShowInfoBanner(InfoBannerTimer, $"{AdditionalStaticData.ExistingFileCount.ToString()} files were already found in the list and have not been added.");
                     AdditionalStaticData.ExistingFileCount = 0;
