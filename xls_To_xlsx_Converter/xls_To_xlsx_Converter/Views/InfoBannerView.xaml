@@ -6,9 +6,38 @@
              xmlns:local="clr-namespace:xls_To_xlsx_Converter.Views"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="CloseButtonStyle" TargetType="{x:Type Button}">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="DodgerBlue"/>
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="MouseEnter" >
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="Black"
+                                            From="White" Duration="0:0:0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+                <EventTrigger RoutedEvent="MouseLeave">
+                    <BeginStoryboard>
+                        <Storyboard>
+                            <ColorAnimation Storyboard.TargetProperty="Foreground.Color" To="White"
+                                            From="Black" Duration="0:0:0"/>
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
     <Grid>
         <TextBlock Text="{Binding fileConverter.InfoBannerText}" Foreground="Gainsboro" FontSize="20" 
                    HorizontalAlignment="Center" VerticalAlignment="Center"/>
+        <Button Content="X" HorizontalAlignment="Right" 
+                Style="{StaticResource CloseButtonStyle}" 
+                FontWeight="Bold" BorderBrush="DodgerBlue"
+                VerticalAlignment="Center" Margin="10" MinWidth="20"
+                Command="{Binding CloseInfoBannerCommand}"/>
         <ProgressBar VerticalAlignment="Top" Height="4" Foreground="#FF2451D6" 
                      Value="{Binding fileConverter.InfoBannerProgress}"
                      Background="DodgerBlue" BorderBrush="DodgerBlue"/>

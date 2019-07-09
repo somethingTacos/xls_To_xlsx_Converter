@@ -19,6 +19,7 @@ namespace xls_To_xlsx_Converter.ViewModel
         public AwaitableDelegateCommand ConvertFilesCommand { get; set; }
         public MyICommand StartDirectorySerachCommand { get; set; }
         public MyICommand CancelSearchCommand { get; set; }
+        public MyICommand CloseInfoBannerCommand { get; set; }
         public FileConverter fileConverter { get; set; }
         public DispatcherTimer InfoBannerTimer = new DispatcherTimer();
 
@@ -27,6 +28,7 @@ namespace xls_To_xlsx_Converter.ViewModel
             _navigationViewModel = navigationViewModel;
             ConvertFilesCommand = new AwaitableDelegateCommand(onConvertFilesCommand, canConvertFilesCommand);
             StartDirectorySerachCommand = new MyICommand(onStartDirectorySerachCommand);
+            CloseInfoBannerCommand = new MyICommand(onCloseInfoBannerCommand);
             CancelSearchCommand = new MyICommand(onCancelSearchCommand);
             InfoBannerTimer.Interval = TimeSpan.FromMilliseconds(50);
             InfoBannerTimer.Tick += InfoBannerTimer_Tick;
@@ -39,11 +41,7 @@ namespace xls_To_xlsx_Converter.ViewModel
 
             if(fileConverter.InfoBannerProgress == 100)
             {
-                InfoBannerTimer.Stop();
-                fileConverter.InfoBannerProgress = 0;
-                fileConverter.IsExpandedInfoBanner = false;
-                fileConverter.IsExpandedDialogBanner = false;
-                fileConverter.AltBannerExpanded = false;
+                CloseInfoBanner();
             }
         }
 
@@ -57,6 +55,7 @@ namespace xls_To_xlsx_Converter.ViewModel
         private void ProcessPaths(ObservableCollection<string> filePaths)
         {
             int ExistingFileCount = 0;
+            int NonXLSFilesCount = 0;
             foreach (string path in filePaths)
             {
                 if(AdditionalStaticData.UnprocessedPaths.Contains(path))
@@ -100,6 +99,10 @@ namespace xls_To_xlsx_Converter.ViewModel
                         {
                             fileConverter.ShowInfoBanner(InfoBannerTimer, "File is not an XLS file");
                         }
+                        else
+                        {
+                            NonXLSFilesCount += 1;
+                        }
                     }
                 }
             }
@@ -121,6 +124,20 @@ namespace xls_To_xlsx_Converter.ViewModel
 
             AdditionalStaticData.UnprocessedPaths = new ObservableCollection<string>(paths);
             ProcessPaths(paths);
+        }
+
+        public void onCloseInfoBannerCommand(object parameter)
+        {
+            CloseInfoBanner();
+        }
+
+        private void CloseInfoBanner()
+        {
+            InfoBannerTimer.Stop();
+            fileConverter.InfoBannerProgress = 0;
+            fileConverter.IsExpandedInfoBanner = false;
+            fileConverter.IsExpandedDialogBanner = false;
+            fileConverter.AltBannerExpanded = false;
         }
 
         public async Task onConvertFilesCommand()
@@ -163,7 +180,7 @@ namespace xls_To_xlsx_Converter.ViewModel
             }
             else
             {
-                if (AdditionalStaticData.UnprocessedPaths.Count() == 1)
+                if (AdditionalStaticData.UnprocessedPaths.Count() == 0)
                 {
                     fileConverter.ShowInfoBanner(InfoBannerTimer, "Directory did not contain any XLS files");
                 }
@@ -177,6 +194,14 @@ namespace xls_To_xlsx_Converter.ViewModel
             if (AdditionalStaticData.UnprocessedPaths.Count() > 0)
             {
                 ProcessPaths(new ObservableCollection<string>(AdditionalStaticData.UnprocessedPaths));
+            }
+            else
+            {
+                if(AdditionalStaticData.ExistingFileCount > 0)
+                {
+                    fileConverter.ShowInfoBanner(InfoBannerTimer, $"{AdditionalStaticData.ExistingFileCount.ToString()} files were already found in the list and have not been added.");
+                    AdditionalStaticData.ExistingFileCount = 0;
+                }
             }
         }
 
