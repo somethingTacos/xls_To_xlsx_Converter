@@ -97,14 +97,22 @@ namespace xls_To_xlsx_Converter.Model
     }
 
     [AddINotifyPropertyChangedInterface]
+    public class ConvertionData
+    {
+        public bool IsNotConvertingFiles { get; set; } = true;
+        public int TotalFilesToConvert { get; set; } = 0;
+        public int FilesConverted { get; set; } = 0;
+        public int ConversionProgress { get; set; } = 0;
+    }
+
+    [AddINotifyPropertyChangedInterface]
     public static class AdditionalStaticData
     {
-        public static bool IsConvertingFiles { get; set; } = false;
-        public static int TotalFilesToConvert { get; set; } = 0;
-        public static int FilesConverted { get; set; } = 0;
         public static int BannerIndex { get; set; } = 1;
         public static ObservableCollection<string> UnprocessedPaths { get; set; } = new ObservableCollection<string>();
+        public static int ProcessedPathsCount { get; set; } = 0;
         public static int ExistingFileCount { get; set; } = 0;
+        public static int NonXLSFileCount { get; set; } = 0;
         public static string SearchDir { get; set; } = "";
     }
 

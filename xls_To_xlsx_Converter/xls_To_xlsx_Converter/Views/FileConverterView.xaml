@@ -201,6 +201,8 @@
                         <cc:CustomDockPanel Style="{StaticResource CustomDockPanel_Style}"
                                             IsIncluded="{Binding IsIncluded}">
                             <CheckBox IsChecked="{Binding IsIncluded}" Margin="5 0" 
+                                      IsEnabled="{Binding DataContext.convertionData.IsNotConvertingFiles, 
+                                                RelativeSource={RelativeSource AncestorType=ScrollViewer}}"
                                       Command="{Binding DataContext.UpdateFilesNotSelectedCommand, 
                                                 RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
                                 <CheckBox.LayoutTransform>
@@ -216,6 +218,8 @@
                             </StackPanel>
                             <Button Content="Remove" Width="60" HorizontalAlignment="Right" DockPanel.Dock="Right" 
                                     Style="{StaticResource RemoveButton_Style}"
+                                    IsEnabled="{Binding DataContext.convertionData.IsNotConvertingFiles, 
+                                                RelativeSource={RelativeSource AncestorType=ScrollViewer}}"
                                     Command="{Binding DataContext.RemoveListedFileCommand,
                                              RelativeSource={RelativeSource AncestorType=ScrollViewer}}"
                                     CommandParameter="{Binding}"/>
@@ -233,6 +237,7 @@
                 Command="{Binding ConvertFilesCommand}"/>
         <cc:MyButton Content="Remove all 'Not Selected' files" Grid.Column="2" Grid.Row="3" Margin="5 15" 
                 NonSelectedFilesExist="{Binding fileConverter.FilesNotSelected}"
+                IsEnabled="{Binding convertionData.IsNotConvertingFiles}"
                 Style="{StaticResource MainMyButton_Style}"
                 Command="{Binding RemoveAllNonSelectedListedFilesCommand}"
                 />

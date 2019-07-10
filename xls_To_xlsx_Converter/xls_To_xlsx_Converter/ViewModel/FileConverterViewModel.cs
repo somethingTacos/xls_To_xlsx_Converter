@@ -26,6 +26,7 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public FileConverter fileConverter { get; set; }
         public DispatcherTimer InfoBannerTimer = new DispatcherTimer();
+        public ConvertionData convertionData { get; set; }
 
         public FileConverterViewModel(NavigationViewModel navigationViewModel)
         {
@@ -55,8 +56,11 @@ namespace xls_To_xlsx_Converter.ViewModel
         public void initFileCoverter()
         {
             FileConverter tempFC = new FileConverter();
+            ConvertionData tempCD = new ConvertionData();
+
 
             fileConverter = tempFC;
+            convertionData = tempCD;
         }
 
         private void ProcessPaths(ObservableCollection<string> filePaths)
@@ -88,7 +92,7 @@ namespace xls_To_xlsx_Converter.ViewModel
                         }
                         else
                         {
-                            if (filePaths.Count() == 1)
+                            if (filePaths.Count() == 1 && AdditionalStaticData.ExistingFileCount == 1)
                             {
                                 fileConverter.ShowInfoBanner(InfoBannerTimer, "File already added to list");
                             }
@@ -100,13 +104,9 @@ namespace xls_To_xlsx_Converter.ViewModel
                     }
                     else
                     {
-                        if (filePaths.Count() == 1)
+                        if (filePaths.Count() == 1 && AdditionalStaticData.ExistingFileCount == 0)
                         {
                             fileConverter.ShowInfoBanner(InfoBannerTimer, "File is not an XLS file");
-                        }
-                        else
-                        {
-                            //NonXLSFilesCount += 1;
                         }
                     }
                 }
@@ -183,7 +183,8 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public async Task onConvertFilesCommand()
         {
-            
+            convertionData.IsNotConvertingFiles = false;
+            //want to close removal buttons and selection checkboxes as soon as the conversion starts.
         }
 
         public bool canConvertFilesCommand()
