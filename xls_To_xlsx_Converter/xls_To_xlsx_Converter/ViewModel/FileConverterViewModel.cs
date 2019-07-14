@@ -26,6 +26,7 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public FileConverter fileConverter { get; set; }
         public DispatcherTimer InfoBannerTimer = new DispatcherTimer();
+        public DispatcherTimer RemovalAnimationTimer = new DispatcherTimer();
         public ConvertionData convertionData { get; set; }
 
         public FileConverterViewModel(NavigationViewModel navigationViewModel)
@@ -38,9 +39,34 @@ namespace xls_To_xlsx_Converter.ViewModel
             RemoveListedFileCommand = new MyICommand(onRemoveListedFileCommand);
             RemoveAllNonSelectedListedFilesCommand = new MyICommand(onRemoveAllNonSelectedListedFilesCommand);
             UpdateFilesNotSelectedCommand = new MyICommand(onUpdateFilesNotSelectedCommand);
+            RemovalAnimationTimer.Interval = TimeSpan.FromMilliseconds(50);
+            RemovalAnimationTimer.Tick += AnimationTimer_Tick;
             InfoBannerTimer.Interval = TimeSpan.FromMilliseconds(50);
             InfoBannerTimer.Tick += InfoBannerTimer_Tick;
             initFileCoverter();
+        }
+
+        private void AnimationTimer_Tick(object sender, EventArgs e)
+        {
+            if (fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).Count() > 0)
+            {
+                FileData fd = fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).FirstOrDefault();
+                fd.MarkedForRemoval = true;
+            }
+            else
+            {
+                fileConverter.FilesNotSelected = false;
+                List<FileData> tempFD = new List<FileData>(fileConverter.FilesToConvert);
+                foreach(FileData fd in tempFD)
+                {
+                    if(fd.MarkedForRemoval)
+                    {
+                        fileConverter.FilesToConvert.Remove(fd);
+                    }
+                }
+                RemovalAnimationTimer.Stop();
+            }
+
         }
 
         private void InfoBannerTimer_Tick(object sender, EventArgs e)
@@ -148,18 +174,7 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         private void onRemoveAllNonSelectedListedFilesCommand(object parameter)
         {
-            ObservableCollection<FileData> tempFDCollection;
-            tempFDCollection = new ObservableCollection<FileData>(fileConverter.FilesToConvert);
-
-            foreach(FileData fileData in tempFDCollection)
-            {
-                if(!fileData.IsIncluded)
-                {
-                    fileConverter.FilesToConvert.Remove(fileData);
-                }
-            }
-
-            fileConverter.FilesNotSelected = false;
+            RemovalAnimationTimer.Start();
         }
 
         public void onCloseInfoBannerCommand(object parameter)
@@ -184,6 +199,7 @@ namespace xls_To_xlsx_Converter.ViewModel
         public async Task onConvertFilesCommand()
         {
             convertionData.IsNotConvertingFiles = false;
+            RemovalAnimationTimer.Start();
             //want to close removal buttons and selection checkboxes as soon as the conversion starts.
         }
 

@@ -56,6 +56,7 @@ namespace xls_To_xlsx_Converter.Model
     {
         public string ConversionStatus { get; set; } = "";
         public FileInfo FileDetails { get; set; }
+        public bool MarkedForRemoval { get; set; } = false;
 
         private bool _IsIncluded;
         public bool IsIncluded
