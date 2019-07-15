@@ -146,10 +146,21 @@
                 </Trigger>
             </Style.Triggers>
         </Style>
-        <Style x:Key="RemoveButton_Style" BasedOn="{StaticResource ResourceKey=NoChromeButton}" TargetType="{x:Type Button}">
+        <Style x:Key="RemoveButton_Style" BasedOn="{StaticResource ResourceKey=NoChromeButton}" TargetType="{x:Type cc:ItemRemovalButton}">
             <Setter Property="Background" Value="IndianRed"/>
             <Setter Property="Foreground" Value="Gainsboro"/>
+            <Setter Property="Width" Value="60"/>
             <Style.Triggers>
+                <Trigger Property="IsClosed" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Width" From="60"
+                                                 To="0" Duration="0:0:0.050"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                </Trigger>
                 <EventTrigger RoutedEvent="MouseEnter">
                     <BeginStoryboard>
                         <Storyboard>
@@ -216,7 +227,7 @@
                                 <TextBlock Text="{Binding FileDetails.DirectoryName}" FontSize="15"
                                            Margin="10 5"/>
                             </StackPanel>
-                            <Button Content="Remove" Width="60" HorizontalAlignment="Right" DockPanel.Dock="Right" 
+                            <cc:ItemRemovalButton Content="Remove" HorizontalAlignment="Right" DockPanel.Dock="Right" 
                                     Style="{StaticResource RemoveButton_Style}"
                                     IsEnabled="{Binding DataContext.convertionData.IsNotConvertingFiles, 
                                                 RelativeSource={RelativeSource AncestorType=ScrollViewer}}"

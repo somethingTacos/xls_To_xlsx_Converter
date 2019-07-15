@@ -40,13 +40,13 @@ namespace xls_To_xlsx_Converter.ViewModel
             RemoveAllNonSelectedListedFilesCommand = new MyICommand(onRemoveAllNonSelectedListedFilesCommand);
             UpdateFilesNotSelectedCommand = new MyICommand(onUpdateFilesNotSelectedCommand);
             RemovalAnimationTimer.Interval = TimeSpan.FromMilliseconds(50);
-            RemovalAnimationTimer.Tick += AnimationTimer_Tick;
+            RemovalAnimationTimer.Tick += RemovalAnimationTimer_Tick;
             InfoBannerTimer.Interval = TimeSpan.FromMilliseconds(50);
             InfoBannerTimer.Tick += InfoBannerTimer_Tick;
             initFileCoverter();
         }
 
-        private void AnimationTimer_Tick(object sender, EventArgs e)
+        private void RemovalAnimationTimer_Tick(object sender, EventArgs e)
         {
             if (fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).Count() > 0)
             {
