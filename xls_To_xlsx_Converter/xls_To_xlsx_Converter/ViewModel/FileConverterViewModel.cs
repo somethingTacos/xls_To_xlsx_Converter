@@ -232,19 +232,20 @@ namespace xls_To_xlsx_Converter.ViewModel
         public async Task onConvertFilesCommand()
         {
             string message = "";
-            string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+            string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths";
+            //string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
             using (Microsoft.Win32.RegistryKey key = Registry.LocalMachine.OpenSubKey(registry_key))
             {
                 foreach (string subkey_name in key.GetSubKeyNames())
                 {
-                    using (RegistryKey subkey = key.OpenSubKey(subkey_name))
-                    {
-                        var blah = subkey.GetValue("DisplayName");
-                        if (blah != null && blah.ToString().Contains("Excel")) //I'm going to have to test this later when I am on a system with office installed.
+                    //using (RegistryKey subkey = key.OpenSubKey(subkey_name))
+                    //{
+                    //var blah = subkey.GetValue("DisplayName");
+                    if (subkey_name != null && subkey_name.Contains("Excel")) //I'm going to have to test this later when I am on a system with office installed.
                         {
-                            message += blah + "\n";
+                            message += subkey_name + "\n";
                         }
-                    }
+                    //}
                 }
             }
             MessageBox.Show(message);
