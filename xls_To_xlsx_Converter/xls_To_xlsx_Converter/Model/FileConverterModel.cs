@@ -100,7 +100,8 @@ namespace xls_To_xlsx_Converter.Model
     [AddINotifyPropertyChangedInterface]
     public class ConvertionData
     {
-        public bool IsNotConvertingFiles { get; set; } = true;
+        public bool IsConvertingFiles { get; set; } = false;
+        public bool EnableControls { get; set; } = true;
         public int TotalFilesToConvert { get; set; } = 0;
         public int FilesConverted { get; set; } = 0;
         public int ConversionProgress { get; set; } = 0;

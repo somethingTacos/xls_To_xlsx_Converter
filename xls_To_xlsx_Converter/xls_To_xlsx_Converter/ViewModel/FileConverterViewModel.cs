@@ -23,7 +23,8 @@ namespace xls_To_xlsx_Converter.ViewModel
         public MyICommand RemoveListedFileCommand { get; set; }
         public MyICommand RemoveAllNonSelectedListedFilesCommand { get; set; }
         public MyICommand UpdateFilesNotSelectedCommand { get; set; }
-
+        public Tuple<bool, FileData> SingleRemoval = new Tuple<bool, FileData>(false, null);
+        public bool DoneMarkingForRemoval { get; set; } = false;
         public FileConverter fileConverter { get; set; }
         public DispatcherTimer InfoBannerTimer = new DispatcherTimer();
         public DispatcherTimer RemovalAnimationTimer = new DispatcherTimer();
@@ -39,7 +40,7 @@ namespace xls_To_xlsx_Converter.ViewModel
             RemoveListedFileCommand = new MyICommand(onRemoveListedFileCommand);
             RemoveAllNonSelectedListedFilesCommand = new MyICommand(onRemoveAllNonSelectedListedFilesCommand);
             UpdateFilesNotSelectedCommand = new MyICommand(onUpdateFilesNotSelectedCommand);
-            RemovalAnimationTimer.Interval = TimeSpan.FromMilliseconds(50);
+            RemovalAnimationTimer.Interval = TimeSpan.FromMilliseconds(200);
             RemovalAnimationTimer.Tick += RemovalAnimationTimer_Tick;
             InfoBannerTimer.Interval = TimeSpan.FromMilliseconds(50);
             InfoBannerTimer.Tick += InfoBannerTimer_Tick;
@@ -48,25 +49,42 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         private void RemovalAnimationTimer_Tick(object sender, EventArgs e)
         {
-            if (fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).Count() > 0)
+            if (DoneMarkingForRemoval)
             {
-                FileData fd = fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).FirstOrDefault();
-                fd.MarkedForRemoval = true;
-            }
-            else
-            {
-                fileConverter.FilesNotSelected = false;
                 List<FileData> tempFD = new List<FileData>(fileConverter.FilesToConvert);
-                foreach(FileData fd in tempFD)
+                foreach (FileData fd in tempFD)
                 {
-                    if(fd.MarkedForRemoval)
+                    if (fd.MarkedForRemoval)
                     {
                         fileConverter.FilesToConvert.Remove(fd);
                     }
                 }
+
+                fileConverter.FilesNotSelected = fileConverter.FilesToConvert.Where(x => !x.IsIncluded).Count() > 0;
+                DoneMarkingForRemoval = false;
                 RemovalAnimationTimer.Stop();
+                return;
             }
 
+            if (SingleRemoval.Item1)
+            {
+                FileData sfd = fileConverter.FilesToConvert.Where(x => x == SingleRemoval.Item2).FirstOrDefault();
+                sfd.MarkedForRemoval = true;
+                DoneMarkingForRemoval = true;
+                SingleRemoval = new Tuple<bool, FileData>(false, null);
+            }
+            else
+            {
+                if (fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).Count() > 0)
+                {
+                    FileData fd = fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).FirstOrDefault();
+                    fd.MarkedForRemoval = true;
+                }
+                else
+                {
+                    DoneMarkingForRemoval = true;
+                }
+            }
         }
 
         private void InfoBannerTimer_Tick(object sender, EventArgs e)
@@ -167,7 +185,8 @@ namespace xls_To_xlsx_Converter.ViewModel
             {
                 if(fileConverter.FilesToConvert.Contains(fileData))
                 {
-                    fileConverter.FilesToConvert.Remove(fileData);
+                    SingleRemoval = new Tuple<bool, FileData>(true, fileData);
+                    RemovalAnimationTimer.Start();
                 }
             }
         }
@@ -198,7 +217,8 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public async Task onConvertFilesCommand()
         {
-            convertionData.IsNotConvertingFiles = false;
+            convertionData.EnableControls = false;
+            convertionData.IsConvertingFiles = true;
             RemovalAnimationTimer.Start();
             //want to close removal buttons and selection checkboxes as soon as the conversion starts.
         }

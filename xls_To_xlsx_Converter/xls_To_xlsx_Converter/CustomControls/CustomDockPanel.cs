@@ -18,5 +18,14 @@ namespace xls_To_xlsx_Converter.CustomControls
             get { return (bool)GetValue(IsIncludedProperty); }
             set { SetValue(IsIncludedProperty, value); }
         }
+
+        public static readonly DependencyProperty IsHiddenProperty =
+            DependencyProperty.Register("IsHidden", typeof(bool), typeof(CustomDockPanel), new PropertyMetadata(false));
+
+        public bool IsHidden
+        {
+            get { return (bool)GetValue(IsHiddenProperty); }
+            set { SetValue(IsHiddenProperty, value); }
+        }
     }
 }
