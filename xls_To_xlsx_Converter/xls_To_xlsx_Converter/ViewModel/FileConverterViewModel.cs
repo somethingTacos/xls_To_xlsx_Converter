@@ -10,6 +10,7 @@ using System.Windows;
 using System.IO;
 using System.Windows.Threading;
 using System.Collections.ObjectModel;
+using Microsoft.Win32;
 
 namespace xls_To_xlsx_Converter.ViewModel
 {
@@ -69,7 +70,10 @@ namespace xls_To_xlsx_Converter.ViewModel
             if (SingleRemoval.Item1)
             {
                 FileData sfd = fileConverter.FilesToConvert.Where(x => x == SingleRemoval.Item2).FirstOrDefault();
-                sfd.MarkedForRemoval = true;
+                if (sfd != null)
+                {
+                    sfd.MarkedForRemoval = true;
+                }
                 DoneMarkingForRemoval = true;
                 SingleRemoval = new Tuple<bool, FileData>(false, null);
             }
@@ -78,7 +82,10 @@ namespace xls_To_xlsx_Converter.ViewModel
                 if (fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).Count() > 0)
                 {
                     FileData fd = fileConverter.FilesToConvert.Where(x => !x.IsIncluded && !x.MarkedForRemoval).FirstOrDefault();
-                    fd.MarkedForRemoval = true;
+                    if (fd != null)
+                    {
+                        fd.MarkedForRemoval = true;
+                    }
                 }
                 else
                 {
@@ -168,15 +175,22 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public void OnFileDrop(string[] filePaths)
         {
-            ObservableCollection<string> paths = new ObservableCollection<string>();
-
-            for(int i = 0; i < filePaths.Count(); i++)
+            if (!convertionData.IsConvertingFiles)
             {
-                paths.Add(filePaths[i]);
-            }
+                ObservableCollection<string> paths = new ObservableCollection<string>();
 
-            AdditionalStaticData.UnprocessedPaths = new ObservableCollection<string>(paths);
-            ProcessPaths(paths);
+                for (int i = 0; i < filePaths.Count(); i++)
+                {
+                    paths.Add(filePaths[i]);
+                }
+
+                AdditionalStaticData.UnprocessedPaths = new ObservableCollection<string>(paths);
+                ProcessPaths(paths);
+            }
+            else
+            {
+                fileConverter.ShowInfoBanner(InfoBannerTimer, "Can't add files while converting files, please wait...");
+            }
         }
 
         public void onRemoveListedFileCommand(object parameter)
@@ -217,15 +231,32 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public async Task onConvertFilesCommand()
         {
-            convertionData.EnableControls = false;
-            convertionData.IsConvertingFiles = true;
-            RemovalAnimationTimer.Start();
-            //want to close removal buttons and selection checkboxes as soon as the conversion starts.
+            string message = "";
+            string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
+            using (Microsoft.Win32.RegistryKey key = Registry.LocalMachine.OpenSubKey(registry_key))
+            {
+                foreach (string subkey_name in key.GetSubKeyNames())
+                {
+                    using (RegistryKey subkey = key.OpenSubKey(subkey_name))
+                    {
+                        var blah = subkey.GetValue("DisplayName");
+                        if (blah != null && blah.ToString().Contains("Excel")) //I'm going to have to test this later when I am on a system with office installed.
+                        {
+                            message += blah + "\n";
+                        }
+                    }
+                }
+            }
+            MessageBox.Show(message);
+
+            //convertionData.EnableControls = false;
+            //convertionData.IsConvertingFiles = true;
+            //RemovalAnimationTimer.Start();
         }
 
         public bool canConvertFilesCommand()
         {
-            return true; //this is temporary
+            return true;
         }
 
         public void onStartDirectorySerachCommand(object parameter)
@@ -283,6 +314,18 @@ namespace xls_To_xlsx_Converter.ViewModel
             }
         }
 
+        //public string ConvertXLS_XLSX(FileInfo file)
+        //{
+        //    var app = new Microsoft.Office.Interop.Excel.Application();
+        //    var xlsFile = file.FullName;
+        //    var wb = app.Workbooks.Open(xlsFile);
+        //    var xlsxFile = xlsFile + "x";
+        //    wb.SaveAs(Filename: xlsxFile, FileFormat: Microsoft.Office.Interop.Excel.XlFileFormat.xlOpenXMLWorkbook);
+        //    wb.Close();
+        //    app.Quit();
+        //    return xlsxFile;
+        //}
+
         public void onCancelSearchCommand(object parameter)
         {
             fileConverter.IsExpandedDialogBanner = false;
@@ -299,27 +342,3 @@ namespace xls_To_xlsx_Converter.ViewModel
         }
     }
 }
-
-
-// I'm being lazy, I'll deal with this later...
-//static void Main(string[] args)
-//{
-//    Console.WriteLine("Enter a file path:");
-//    string path = Console.ReadLine();
-
-//    FileInfo file = new FileInfo(path);
-
-//    ConvertXLS_XLSX(file);
-//}
-
-//public static string ConvertXLS_XLSX(FileInfo file)
-//{
-//    var app = new Microsoft.Office.Interop.Excel.Application();
-//    var xlsFile = file.FullName;
-//    var wb = app.Workbooks.Open(xlsFile);
-//    var xlsxFile = xlsFile + "x";
-//    wb.SaveAs(Filename: xlsxFile, FileFormat: Microsoft.Office.Interop.Excel.XlFileFormat.xlOpenXMLWorkbook);
-//    wb.Close();
-//    app.Quit();
-//    return xlsxFile;
-//}

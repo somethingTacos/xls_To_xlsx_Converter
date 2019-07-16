@@ -62,7 +62,6 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="CustomControls\CustomDockPanel.cs" />
-    <Compile Include="CustomControls\ItemRemovalButton.cs" />
     <Compile Include="CustomControls\MyBanner.xaml.cs">
       <DependentUpon>MyBanner.xaml</DependentUpon>
     </Compile>
