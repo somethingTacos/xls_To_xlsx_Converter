@@ -233,19 +233,14 @@ namespace xls_To_xlsx_Converter.ViewModel
         {
             string message = "";
             string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths";
-            //string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall";
             using (Microsoft.Win32.RegistryKey key = Registry.LocalMachine.OpenSubKey(registry_key))
             {
                 foreach (string subkey_name in key.GetSubKeyNames())
                 {
-                    //using (RegistryKey subkey = key.OpenSubKey(subkey_name))
-                    //{
-                    //var blah = subkey.GetValue("DisplayName");
-                    if (subkey_name != null && subkey_name.Contains("Excel")) //I'm going to have to test this later when I am on a system with office installed.
+                    if (subkey_name != null && subkey_name.Contains("excel"))
                         {
                             message += subkey_name + "\n";
                         }
-                    //}
                 }
             }
             MessageBox.Show(message);
