@@ -130,7 +130,10 @@
                     <Setter Property="Foreground" Value="Red"/>
                 </Trigger>
                 <Trigger Property="Text" Value="Pending...">
-                    <Setter Property="Foreground" Value="Black"/>
+                    <Setter Property="Foreground" Value="Purple"/>
+                </Trigger>
+                <Trigger Property="Text" Value="Converting...">
+                    <Setter Property="Foreground" Value="#c97a18"/>
                 </Trigger>
                 <Trigger Property="Text" Value="Converted">
                     <Setter Property="Foreground" Value="Green"/>
@@ -171,6 +174,14 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Width" From="0"
+                                                 To="20" Duration="0:0:0.100"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -188,6 +199,14 @@
                             </Storyboard>
                         </BeginStoryboard>
                     </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Width" From="0"
+                                                 To="60" Duration="0:0:0.100"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
                 </Trigger>
                 <EventTrigger RoutedEvent="MouseEnter">
                     <BeginStoryboard>

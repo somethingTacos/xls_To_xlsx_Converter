@@ -104,7 +104,7 @@ namespace xls_To_xlsx_Converter.ViewModel
             }
         }
 
-        public bool CheckForExcelExecutable()
+        public bool CheckForExcel()
         {
             Type officeType = Type.GetTypeFromProgID("Excel.Application");
             if (officeType == null)
@@ -125,7 +125,7 @@ namespace xls_To_xlsx_Converter.ViewModel
             ConvertionData tempCD = new ConvertionData();
 
             fileConverter = tempFC;
-            fileConverter.ExcelExists = CheckForExcelExecutable();
+            fileConverter.ExcelExists = CheckForExcel();
             convertionData = tempCD;
         }
 
@@ -256,11 +256,25 @@ namespace xls_To_xlsx_Converter.ViewModel
             convertionData.EnableControls = false;
             convertionData.IsConvertingFiles = true;
             RemovalAnimationTimer.Start();
+
+            string TaskInfo = await ConvertSelectedXLSFiles(fileConverter.FilesToConvert);
+
+            if (TaskInfo == "All Files Converted Successfully")
+            {
+                fileConverter.ShowInfoBanner(InfoBannerTimer, TaskInfo);
+            }
+            else
+            {
+                MessageBox.Show(TaskInfo, "Task Information");
+            }
+
+            convertionData.EnableControls = true;
+            convertionData.IsConvertingFiles = false;
         }
 
         public bool canConvertFilesCommand()
         {
-            return true;
+            return !convertionData.IsConvertingFiles;
         }
 
         public void onStartDirectorySerachCommand(object parameter)
@@ -317,6 +331,55 @@ namespace xls_To_xlsx_Converter.ViewModel
                 }
             }
         }
+
+        public async Task<string> ConvertSelectedXLSFiles(ObservableCollection<FileData> FilesToConvert)
+        {
+            string TaskInfo = String.Empty;
+            await Task.Run(() =>
+            {
+                TaskInfo = _ConvertSelectedXLSFiles(FilesToConvert);
+            });
+
+            return TaskInfo;
+        }
+
+        public string _ConvertSelectedXLSFiles(ObservableCollection<FileData> filesToConvert)
+        {
+            string ConversionInfo = "";
+
+            foreach (FileData fd in filesToConvert)
+            {
+                fd.ConversionStatus = "Pending...";
+            }
+            foreach (FileData fd in filesToConvert)
+            {
+                try
+                {
+                    fd.ConversionStatus = "Converting...";
+                    string ConvertedFilePath = ConvertXLS_XLSX(fd.FileDetails);
+                    if (File.Exists(ConvertedFilePath))
+                    {
+                        fd.ConversionStatus = "Converted";
+                    }
+                    else
+                    {
+                        fd.ConversionStatus = "Error";
+                        ConversionInfo += $"Error Converting: '{ConvertedFilePath}' - File Does not exist\n";
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ConversionInfo += $"Error Converting: '{fd.FileDetails.FullName}' - {ex.Message}\n";
+                }
+            }
+            if(ConversionInfo == "")
+            {
+                ConversionInfo = "All Files Converted Successfully";
+            }
+
+            return ConversionInfo;
+        }
+
         public string ConvertXLS_XLSX(FileInfo file)
         {
             try
