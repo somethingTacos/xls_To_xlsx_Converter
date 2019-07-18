@@ -26,6 +26,7 @@ namespace xls_To_xlsx_Converter.Model
         public bool AltBannerExpanded { get; set; } = false;
         public string DialogBannerText { get; set; } = "Dialog Banner Text";
         public bool IsRecursiveSearch { get; set; } = false;
+        public bool ExcelExists { get; set; } = false;
 
         public bool FilesNotSelected { get; set; } = false;
 

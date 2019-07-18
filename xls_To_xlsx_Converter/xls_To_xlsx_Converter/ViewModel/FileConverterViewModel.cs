@@ -104,13 +104,31 @@ namespace xls_To_xlsx_Converter.ViewModel
             }
         }
 
+        public bool CheckForExcelExecutable()
+        {
+            bool ExcelFound = false;
+            string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths";
+            using (Microsoft.Win32.RegistryKey key = Registry.LocalMachine.OpenSubKey(registry_key))
+            {
+                foreach (string subkey_name in key.GetSubKeyNames())
+                {
+                    if (subkey_name != null && subkey_name.Contains("excel.exe"))
+                    {
+                        ExcelFound = true;
+                    }
+                }
+            }
+
+            return ExcelFound;
+        }
+
         public void initFileCoverter()
         {
             FileConverter tempFC = new FileConverter();
             ConvertionData tempCD = new ConvertionData();
 
-
             fileConverter = tempFC;
+            fileConverter.ExcelExists = CheckForExcelExecutable();
             convertionData = tempCD;
         }
 
@@ -175,7 +193,7 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public void OnFileDrop(string[] filePaths)
         {
-            if (!convertionData.IsConvertingFiles)
+            if (!convertionData.IsConvertingFiles && fileConverter.ExcelExists)
             {
                 ObservableCollection<string> paths = new ObservableCollection<string>();
 
@@ -189,7 +207,14 @@ namespace xls_To_xlsx_Converter.ViewModel
             }
             else
             {
-                fileConverter.ShowInfoBanner(InfoBannerTimer, "Can't add files while converting files, please wait...");
+                if (!fileConverter.ExcelExists)
+                {
+                    fileConverter.ShowInfoBanner(InfoBannerTimer, "Could not find excel. Is office software installed?");
+                }
+                else
+                {
+                    fileConverter.ShowInfoBanner(InfoBannerTimer, "Can't add files while converting files, please wait...");
+                }
             }
         }
 
@@ -231,23 +256,9 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public async Task onConvertFilesCommand()
         {
-            string message = "";
-            string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths";
-            using (Microsoft.Win32.RegistryKey key = Registry.LocalMachine.OpenSubKey(registry_key))
-            {
-                foreach (string subkey_name in key.GetSubKeyNames())
-                {
-                    if (subkey_name != null && subkey_name.Contains("excel"))
-                        {
-                            message += subkey_name + "\n";
-                        }
-                }
-            }
-            MessageBox.Show(message);
-
-            //convertionData.EnableControls = false;
-            //convertionData.IsConvertingFiles = true;
-            //RemovalAnimationTimer.Start();
+            convertionData.EnableControls = false;
+            convertionData.IsConvertingFiles = true;
+            RemovalAnimationTimer.Start();
         }
 
         public bool canConvertFilesCommand()
@@ -309,18 +320,17 @@ namespace xls_To_xlsx_Converter.ViewModel
                 }
             }
         }
-
-        //public string ConvertXLS_XLSX(FileInfo file)
-        //{
-        //    var app = new Microsoft.Office.Interop.Excel.Application();
-        //    var xlsFile = file.FullName;
-        //    var wb = app.Workbooks.Open(xlsFile);
-        //    var xlsxFile = xlsFile + "x";
-        //    wb.SaveAs(Filename: xlsxFile, FileFormat: Microsoft.Office.Interop.Excel.XlFileFormat.xlOpenXMLWorkbook);
-        //    wb.Close();
-        //    app.Quit();
-        //    return xlsxFile;
-        //}
+        public string ConvertXLS_XLSX(FileInfo file)
+        {
+            var app = new Microsoft.Office.Interop.Excel.Application();
+            var xlsFile = file.FullName;
+            var wb = app.Workbooks.Open(xlsFile);
+            var xlsxFile = xlsFile + "x";
+            wb.SaveAs(Filename: xlsxFile, FileFormat: Microsoft.Office.Interop.Excel.XlFileFormat.xlOpenXMLWorkbook);
+            wb.Close();
+            app.Quit();
+            return xlsxFile;
+        }
 
         public void onCancelSearchCommand(object parameter)
         {
