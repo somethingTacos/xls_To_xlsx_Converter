@@ -106,21 +106,6 @@ namespace xls_To_xlsx_Converter.ViewModel
 
         public bool CheckForExcelExecutable()
         {
-            //bool ExcelFound = false;
-            //string registry_key = @"SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths";
-            //using (Microsoft.Win32.RegistryKey key = Registry.LocalMachine.OpenSubKey(registry_key))
-            //{
-            //    foreach (string subkey_name in key.GetSubKeyNames())
-            //    {
-            //        if (subkey_name != null && subkey_name.Contains("excel.exe"))
-            //        {
-            //            ExcelFound = true;
-            //        }
-            //    }
-            //}
-
-            //return ExcelFound;
-
             Type officeType = Type.GetTypeFromProgID("Excel.Application");
             if (officeType == null)
             {
