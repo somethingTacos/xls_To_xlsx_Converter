@@ -1,14 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Threading;
 using PropertyChanged;
-using xls_To_xlsx_Converter.ViewModel;
 
 namespace xls_To_xlsx_Converter.Model
 {
@@ -103,9 +97,9 @@ namespace xls_To_xlsx_Converter.Model
     {
         public bool IsConvertingFiles { get; set; } = false;
         public bool EnableControls { get; set; } = true;
-        public int TotalFilesToConvert { get; set; } = 0;
-        public int FilesConverted { get; set; } = 0;
-        public int ConversionProgress { get; set; } = 0;
+        //public int TotalFilesToConvert { get; set; } = 0;
+        //public int FilesConverted { get; set; } = 0;
+        //public int ConversionProgress { get; set; } = 0;
     }
 
     [AddINotifyPropertyChangedInterface]
@@ -113,11 +107,9 @@ namespace xls_To_xlsx_Converter.Model
     {
         public static int BannerIndex { get; set; } = 1;
         public static ObservableCollection<string> UnprocessedPaths { get; set; } = new ObservableCollection<string>();
-        public static int ProcessedPathsCount { get; set; } = 0;
+        //public static int ProcessedPathsCount { get; set; } = 0;
         public static int ExistingFileCount { get; set; } = 0;
-        public static int NonXLSFileCount { get; set; } = 0;
+        //public static int NonXLSFileCount { get; set; } = 0;
         public static string SearchDir { get; set; } = "";
     }
-
-
 }

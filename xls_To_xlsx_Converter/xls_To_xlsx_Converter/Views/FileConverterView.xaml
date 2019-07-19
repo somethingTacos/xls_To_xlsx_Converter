@@ -138,6 +138,9 @@
                 <Trigger Property="Text" Value="Converted">
                     <Setter Property="Foreground" Value="Green"/>
                 </Trigger>
+                <Trigger Property="Text" Value="Exists">
+                    <Setter Property="Foreground" Value="Beige"/>
+                </Trigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="CustomDockPanel_Style" TargetType="{x:Type cc:CustomDockPanel}">

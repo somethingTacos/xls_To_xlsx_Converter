@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using xls_To_xlsx_Converter.ViewModel;
 using xls_To_xlsx_Converter.Model;
 using xls_To_xlsx_Converter.Helpers;
 using System.Windows;
 using System.IO;
 using System.Windows.Threading;
 using System.Collections.ObjectModel;
-using Microsoft.Win32;
 
 namespace xls_To_xlsx_Converter.ViewModel
 {
@@ -290,7 +287,7 @@ namespace xls_To_xlsx_Converter.ViewModel
                SOption = SearchOption.AllDirectories;
             }
 
-            string[] xlsFiles = Directory.GetFiles(AdditionalStaticData.SearchDir, "*.xls", SOption);
+            string[] xlsFiles = Directory.GetFiles(AdditionalStaticData.SearchDir, "*.xls", SOption).Where(x => x.EndsWith("xls")).ToArray();
             if (xlsFiles.Count() > 0)
             {
                 for (int i = 0; i < xlsFiles.Count(); i++)
@@ -356,20 +353,31 @@ namespace xls_To_xlsx_Converter.ViewModel
                 try
                 {
                     fd.ConversionStatus = "Converting...";
-                    string ConvertedFilePath = ConvertXLS_XLSX(fd.FileDetails);
-                    if (File.Exists(ConvertedFilePath))
+                    string ConvertedFilePath = "";
+                    if (!File.Exists(fd.FileDetails.FullName + "x"))
                     {
-                        fd.ConversionStatus = "Converted";
+                        ConvertedFilePath = ConvertXLS_XLSX(fd.FileDetails);
+
+                        if (File.Exists(ConvertedFilePath))
+                        {
+                            fd.ConversionStatus = "Converted";
+                        }
+                        else
+                        {
+                            fd.ConversionStatus = "Error";
+                            ConversionInfo += $"Error Converting: '{fd.FileDetails.FullName}' - {ConvertedFilePath}\n\n";
+                        }
                     }
                     else
                     {
-                        fd.ConversionStatus = "Error";
-                        ConversionInfo += $"Error Converting: '{ConvertedFilePath}' - File Does not exist\n";
+                        fd.ConversionStatus = "Exists";
                     }
+
+                    
                 }
                 catch (Exception ex)
                 {
-                    ConversionInfo += $"Error Converting: '{fd.FileDetails.FullName}' - {ex.Message}\n";
+                    ConversionInfo += $"Error Converting: '{fd.FileDetails.FullName}' - {ex.Message}\n\n";
                 }
             }
             if(ConversionInfo == "")
