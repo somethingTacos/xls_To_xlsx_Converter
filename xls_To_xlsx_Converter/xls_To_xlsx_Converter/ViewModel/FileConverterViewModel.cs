@@ -203,7 +203,7 @@ namespace xls_To_xlsx_Converter.ViewModel
             {
                 if (!fileConverter.ExcelExists)
                 {
-                    fileConverter.ShowInfoBanner(InfoBannerTimer, "Could not find excel. Is office software installed?");
+                    fileConverter.ShowInfoBanner(InfoBannerTimer, "Microsoft Excel is required and was not found. Is office software installed?");
                 }
                 else
                 {
