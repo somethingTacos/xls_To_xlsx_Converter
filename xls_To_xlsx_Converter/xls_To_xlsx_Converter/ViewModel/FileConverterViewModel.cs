@@ -256,7 +256,7 @@ namespace xls_To_xlsx_Converter.ViewModel
 
             string TaskInfo = await ConvertSelectedXLSFiles(fileConverter.FilesToConvert);
 
-            if (TaskInfo == "All Files Converted Successfully")
+            if (TaskInfo == "All Files Converted Successfully" || TaskInfo == "No Files to Convert")
             {
                 fileConverter.ShowInfoBanner(InfoBannerTimer, TaskInfo);
             }
@@ -380,9 +380,17 @@ namespace xls_To_xlsx_Converter.ViewModel
                     ConversionInfo += $"Error Converting: '{fd.FileDetails.FullName}' - {ex.Message}\n\n";
                 }
             }
-            if(ConversionInfo == "")
+
+            if (filesToConvert.Count() == 0)
             {
-                ConversionInfo = "All Files Converted Successfully";
+                ConversionInfo = "No Files to Convert";
+            }
+            else
+            {
+                if (ConversionInfo == "")
+                {
+                    ConversionInfo = "All Files Converted Successfully";
+                }
             }
 
             return ConversionInfo;
