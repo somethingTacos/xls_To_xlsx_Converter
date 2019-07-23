@@ -334,6 +334,12 @@ namespace xls_To_xlsx_Converter.ViewModel
             string TaskInfo = String.Empty;
             await Task.Run(() =>
             {
+                do
+                {
+                    //wait for removal to finish
+                }
+                while (RemovalAnimationTimer.IsEnabled);
+
                 TaskInfo = _ConvertSelectedXLSFiles(FilesToConvert);
             });
 
